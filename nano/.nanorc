@@ -1,0 +1,39 @@
+## Include syntax files
+# include "/usr/share/nano/*.nanorc"
+include "~/.config/nano/*.nanorc"
+
+set linenumbers
+
+## use this tab size instead of the default; it must be greater than 0.
+set tabsize 4
+
+## Use auto-indentation.
+set autoindent
+
+## Use bold text instead of reverse video text.
+set boldtext
+
+## The characters treated as closing brackets when justifying
+## paragraphs.  They cannot contain blank characters.  Only closing
+## punctuation, optionally followed by closing brackets, can end
+## sentences.
+##
+set brackets ""')>]}"
+
+## The opening and closing brackets that can be found by bracket
+## searches.  They cannot contain blank characters.  The former set must
+## come before the latter set, and both must be in the same order.
+##
+set matchbrackets "(<[{)>]}"
+
+## Enable mouse support, if available for your system.  When enabled,
+## mouse clicks can be used to place the cursor, set the mark (with a
+## double click), and execute shortcuts.  The mouse will work in the X
+## Window System, and on the console when gpm is running.
+##
+set mouse
+
+## Use this spelling checker instead of the internal one.  This option
+## does not properly have a default value.
+##
+set speller "aspell -x -c"
