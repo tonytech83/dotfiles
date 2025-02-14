@@ -26,11 +26,11 @@ parse_git_branch() {
       local ahead=$(git rev-list --count HEAD ^"$upstream" 2>/dev/null)
       local behind=$(git rev-list --count "$upstream" ^HEAD 2>/dev/null)
       if [[ $ahead -gt 0 ]]; then
-        ahead_behind="↑$ahead"
+        ahead_behind="$ahead"
         branch_status=""
       fi
       if [[ $behind -gt 0 ]]; then
-        ahead_behind="${ahead_behind}↓$behind"
+        ahead_behind="${ahead_behind}$behind"
         branch_status=""
       fi
     fi
