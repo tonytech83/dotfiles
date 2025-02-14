@@ -57,24 +57,8 @@ parse_git_branch() {
     git_status="$branch_status $ahead_behind $staged $modified $untracked"
     git_status=$(echo "$git_status" | tr -s ' ')  # Remove extra spaces
 
-    echo "%{$fg[white]%}on %{$fg_bold[red]%} $branch$git_status$RESET"
+    echo "%{$fg[white]%}on %{$fg_bold[red]%} $branch$git_status$RESET"
   fi
-}
-
-# Python Virtual Environment Detection
-parse_python_venv() {
-  if [[ -n "$VIRTUAL_ENV" ]]; then
-    echo "$ORANGE[ $WHITEvenv$NEW_ORANGE ]$RESET"
-  fi
-}
-
-# Function to calculate spacing
-get_space () {
-  local STR="$1$2"
-  local zero='%([BSUbfksu]|([FB]|){*})'
-  local LENGTH=${#${(S%%)STR//$~zero/}}
-  local SPACES=$(( COLUMNS - LENGTH ))
-  (( SPACES > 0 )) && printf '%*s' $SPACES
 }
 
 if [[ $EUID -eq 0 ]]; then
@@ -87,13 +71,9 @@ fi
 
 # Precmd function for prompt formatting
 bureau_precmd () {
-  #local LEFT="$GRAY%B[ %~ ]%b"
-  local LEFT="%{$fg_bold[gray]%} [ %~ ]"
+  local LEFT="%{$fg_bold[gray]%}[ %~ ]"
   local GIT="$(parse_git_branch)"
-  local RIGHT="%{$ORANGE%}%B[%b $_USERNAME%{$fg[white]%}@%{$LAVENDER%}%m %{$ORANGE%}]"
-  local SPACES=$(get_space "$LEFT $GIT" "$RIGHT")
   print
-  #print -rP "$LEFT $GIT$SPACES$RIGHT"
   print -rP "$LEFT $GIT"
 }
 
