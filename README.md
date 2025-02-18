@@ -22,12 +22,12 @@ Contains dotfiles
 
 - Fedora
   ```sh
-  sudo dnf install git curl
+  sudo dnf install -y -q git curl
   ```
 
 - OpenSUSE
   ```sh
-  sudo zypper install git curl
+  sudo zypper install -n git curl
   ```
 
 ### 2. Checkout the repo in your $HOME folder using git.
