@@ -3,7 +3,9 @@
 #######################################################
 export PATH=$PATH:"$HOME/.local/bin"
 
+#######################################################
 ## Set the directory we will store zinit and plugins
+#######################################################
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 ## Download Zinit, if it's not there yet
@@ -100,7 +102,24 @@ alias c='clear'
 #######################################################
 # Set the Oh My Posh
 #######################################################
-eval "$(oh-my-posh init zsh --config /home/tonytech/repos/dotfiles/.config/oh-my-posh/minimal.toml)"
+OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
+
+# Ensure ~/.local/bin exists
+mkdir -p "$OMP_HOME"
+
+# Check if oh-my-posh exists, if not, install it
+if [ ! -f "$OMP_HOME/oh-my-posh" ]; then
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$OMP_HOME"
+fi
+
+# eval "$(oh-my-posh init zsh --config /home/tonytech/repos/dotfiles/.config/oh-my-posh/minimal.toml)"
+
+# Load Oh-My-Posh if installed
+if command -v oh-my-posh >/dev/null; then
+    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
+else
+    echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
+fi
 
 #######################################################
 ## Shell integration
