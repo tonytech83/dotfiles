@@ -30,7 +30,7 @@ checkEnv() {
     done
 
     # Determine the package manager to use
-    PACKAGEMANAGER="apt dnf yum pacman zypper apk"
+    PACKAGEMANAGER="apt dnf yum pacman zypper"
     for pgm in $PACKAGEMANAGER; do
         if command_exists "$pgm"; then
             PACKAGER="$pgm"
@@ -92,6 +92,8 @@ installDepend() {
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
 
     elif [ "$PACKAGER" = "dnf" ]; then
+        ${SUDO_CMD} ${PACKAGER} install -y ${DEPENDENCIES}
+    elif [ "$PACKAGER" = "zypper" ]; then
         ${SUDO_CMD} ${PACKAGER} install -y ${DEPENDENCIES}
     else
         ${SUDO_CMD} ${PACKAGER} install -yq ${DEPENDENCIES}
