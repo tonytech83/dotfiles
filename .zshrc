@@ -29,6 +29,7 @@ zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 # uncomment is and write down plugin for your distribution
 # zinit snippet OMZP::archlinux
+
 ## Load completions
 autoload -U compinit && compinit
 
@@ -81,6 +82,16 @@ setopt hist_find_no_dups
 alias ls='lsd -a --group-directories-first'
 alias la='lsd -Al --group-directories-first --color auto'
 alias c='clear'
+#######################################################
+# Load Oh-My-Posh if installed
+#######################################################
+OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
+
+if command -v oh-my-posh >/dev/null; then
+    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
+else
+    echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
+fi
 
 #######################################################
 ## Shell integration
