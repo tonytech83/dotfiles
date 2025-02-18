@@ -200,8 +200,8 @@ setupZshConfig() {
         exit 1
     fi
 
-    # Change default shell to zsh for your user
-    chsh -s $(which zsh)
+    # Change default shell to zsh for current user
+    sudo chsh -s $(which zsh) $USER
 
     echo "${GREEN}ZSH configuration setup completed successfully!${RC}"
 
