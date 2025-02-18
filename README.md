@@ -7,33 +7,39 @@ Contains dotfiles
 - git
 - stow
 
-## installation
+## Installation
 
-1. Install requirements
-```sh
-# Debian
-sudo apt update && sudo apt install -y git curl
+### 1. Install requirements
+- Debian
+  ```sh
+  sudo apt update && sudo apt install -y git curl
+  ```
 
-# Arch Linux
-sudo pacman -S git curl
+- Arch Linux
+  ```sh
+  sudo pacman -S --noconfirm git curl
+  ```
 
-# Fedora
-sudo dnf install git curl
+- Fedora
+  ```sh
+  sudo dnf install git curl
+  ```
 
-# OpenSUSE
-sudo zypper install git curl
-```
+- OpenSUSE
+  ```sh
+  sudo zypper install git curl
+  ```
 
-1. Checkout the repo in your $HOME folder using git.
+### 2. Checkout the repo in your $HOME folder using git.
 ```sh
 git clone https://github.com/tonytech83/dotfiles.git
 cd dotfiles
 ```
-2. Use GNU stow to create symlinks
+### 3. Make `install-zsh.sh` executable.
 ```sh
 chmod +x install-zsh.sh
 ```
-3. Execute it
+3. To install `.zshrc` configuration, execute the following command in your terminal:
 ```sh
 ./install-zsh.sh
 ```
