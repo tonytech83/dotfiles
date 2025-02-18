@@ -26,29 +26,17 @@ zinit light Aloxaf/fzf-tab
 ## Add in snippets (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins)
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
 zinit snippet OMZP::command-not-found
-
+# uncomment is and write down plugin for your distribution
+# zinit snippet OMZP::archlinux
 ## Load completions
 autoload -U compinit && compinit
 
+## Add in Oh-My-Posh
+zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
+
 ## Replay cached completions
 zinit cdreplay -q
-
-#######################################################
-# COLORS
-# 1;31 → Bold Red
-# 1;32 → Bold Green
-# 1;36 → Bold Cyan
-# 1;33 → Bold Yellow
-# 1;35 → Bold Magenta
-# 1;37 → Bold White
-#######################################################
-# Enable colors
-#eval $(dircolors -b)
-
-# Set folder colors
-#export LS_COLORS="${LS_COLORS}:di=1;38;5;33;4"
 
 #######################################################
 ## Comletion styling
@@ -63,11 +51,6 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 #
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-#######################################################
-## Add in Oh-My-Posh
-#######################################################
-zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
 
 #######################################################
 ## Keybinding
@@ -98,28 +81,6 @@ setopt hist_find_no_dups
 alias ls='lsd -a --group-directories-first'
 alias la='lsd -Al --group-directories-first --color auto'
 alias c='clear'
-
-#######################################################
-# Set the Oh My Posh
-#######################################################
-OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
-
-# Ensure ~/.local/bin exists
-mkdir -p "$OMP_HOME"
-
-# Check if oh-my-posh exists, if not, install it
-if [ ! -f "$OMP_HOME/oh-my-posh" ]; then
-    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$OMP_HOME"
-fi
-
-# eval "$(oh-my-posh init zsh --config /home/tonytech/repos/dotfiles/.config/oh-my-posh/minimal.toml)"
-
-# Load Oh-My-Posh if installed
-if command -v oh-my-posh >/dev/null; then
-    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
-else
-    echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
-fi
 
 #######################################################
 ## Shell integration
