@@ -207,8 +207,7 @@ setupZshConfig() {
 
     # Optionally source the new configuration
     if [ -f "$HOME/.zshrc" ]; then
-    	echo "${YELLOW}Please logout and login agian!${RC}"
-        echo "${YELLOW}To apply new configuration, please run: source ~/.zshrc${RC}"
+    	echo "${YELLOW}Please logout and login again! The installation will continue ...${RC}"
     fi
 }
 
