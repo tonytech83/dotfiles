@@ -120,8 +120,7 @@ installZsh() {
 
 # Function to install fzf
 installFzf() {
-	FZF_DIR= 
-    if command_exists fzf || -d "$HOME/dotfiles"; then
+    if command_exists fzf || [ -d "$HOME/.fzf" ]; then
         echo "Fzf already installed"
     else
         echo "${YELLOW}Installing Fzf...${RC}"
