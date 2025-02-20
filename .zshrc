@@ -3,7 +3,9 @@
 #######################################################
 export PATH=$PATH:"$HOME/.local/bin"
 
+#######################################################
 ## Set the directory we will store zinit and plugins
+#######################################################
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 ## Download Zinit, if it's not there yet
@@ -24,16 +26,22 @@ zinit light Aloxaf/fzf-tab
 ## Add in snippets (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins)
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::debian
 zinit snippet OMZP::command-not-found
+# uncomment is and write down plugin for your distribution
+# zinit snippet OMZP::archlinux
 
 ## Load completions
 autoload -U compinit && compinit
 
+## Add in Oh-My-Posh
+zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
+
 ## Replay cached completions
 zinit cdreplay -q
 
+#######################################################
 ## Comletion styling
+#######################################################
 # using lower case for completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # add colors when using completion
@@ -45,16 +53,17 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 #
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-## Add in Oh-My-Posh
-zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
-
+#######################################################
 ## Keybinding
+#######################################################
 # Ctrl+p search history backward
 bindkey '^p' history-search-backward
 # Ctrl+n search hostory forward
 bindkey '^n' history-search-forward
 
+#######################################################
 # History
+#######################################################
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
@@ -67,17 +76,26 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
+#######################################################
 ## Aliases
-alias ls='ls --color'
-alias la='ls -Al --color'
+#######################################################
+alias ls='lsd -a --group-directories-first'
+alias la='lsd -Al --group-directories-first --color auto'
 alias c='clear'
+#######################################################
+# Load Oh-My-Posh if installed
+#######################################################
+OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
+
+if command -v oh-my-posh >/dev/null; then
+    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
+else
+    echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
+fi
 
 #######################################################
-# Set the Oh My Posh
-#######################################################
-eval "$(oh-my-posh init zsh --config ~/dotfiles/zsh/minimal.toml)"
-
 ## Shell integration
+#######################################################
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"

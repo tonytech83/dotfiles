@@ -1,6 +1,6 @@
 ## Include syntax files
-# include "/usr/share/nano/*.nanorc"
-include "~/.config/nano/*.nanorc"
+include "/usr/share/nano/*.nanorc"
+# include "~/.config/nano/*.nanorc"
 
 set linenumbers
 
