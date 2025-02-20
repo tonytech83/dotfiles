@@ -1,42 +1,43 @@
 #######################################################
-# EXPORTS
+## EXPORTS
 #######################################################
 export PATH=$PATH:"$HOME/.local/bin"
 
 #######################################################
-## Set the directory we will store zinit and plugins
+## Setup Zinit and plugins
 #######################################################
+# Set the directory for Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-## Download Zinit, if it's not there yet
+# Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
         mkdir -p "$(dirname $ZINIT_HOME)"
         git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-## Load zinit
+# Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-## Add in zsh plugins
+# Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
-## Add in snippets (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins)
+# Add in snippets (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins)
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 # uncomment is and write down plugin for your distribution
 # zinit snippet OMZP::archlinux
 
-## Load completions
+# Load completions
 autoload -U compinit && compinit
 
-## Add in Oh-My-Posh
+# Add in Oh-My-Posh
 zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
 
-## Replay cached completions
+# Replay cached completions
 zinit cdreplay -q
 
 #######################################################
@@ -62,7 +63,7 @@ bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 
 #######################################################
-# History
+## History
 #######################################################
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -82,8 +83,9 @@ setopt hist_find_no_dups
 alias ls='lsd -a --group-directories-first'
 alias la='lsd -Al --group-directories-first --color auto'
 alias c='clear'
+
 #######################################################
-# Load Oh-My-Posh if installed
+## Load Oh-My-Posh if installed
 #######################################################
 OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
 
