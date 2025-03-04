@@ -85,14 +85,14 @@ installDepend() {
             echo "No AUR helper found. Please install yay or paru."
             exit 1
         fi
-        "${AUR_HELPER}" --noconfirm -S "${DEPENDENCIES}"
+        "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
 
     elif [ "$PACKAGER" = "dnf" ]; then
-        ${SUDO_CMD} "${PACKAGER}" install -y "${DEPENDENCIES}"
+        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
     elif [ "$PACKAGER" = "zypper" ]; then
-        ${SUDO_CMD} "${PACKAGER}" install -y "${DEPENDENCIES}"
+        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
     else
-        ${SUDO_CMD} "${PACKAGER}" install -yq "${DEPENDENCIES}"
+        ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
     fi
 }
 
