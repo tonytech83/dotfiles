@@ -28,7 +28,7 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
-# uncomment is and write down plugin for your distribution
+# uncomment and write down plugin for your distribution
 # zinit snippet OMZP::archlinux
 
 # Load completions
@@ -80,9 +80,7 @@ setopt hist_find_no_dups
 #######################################################
 ## Aliases
 #######################################################
-alias ls='lsd -a --group-directories-first'
-alias la='lsd -Al --group-directories-first --color auto'
-alias c='clear'
+[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 
 #######################################################
 ## Load Oh-My-Posh if installed
