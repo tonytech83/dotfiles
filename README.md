@@ -39,7 +39,7 @@ cd dotfiles
 ```sh
 chmod +x install-zsh.sh
 ```
-3. To install `.zshrc` configuration, execute the following command in your terminal:
+### 4. To install `.zshrc` configuration, execute the following command in your terminal:
 ```sh
 ./install-zsh.sh
 ```
