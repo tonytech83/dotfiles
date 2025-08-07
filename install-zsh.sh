@@ -18,16 +18,20 @@ DEPENDENCIES=""
 
 print_action() {
     local content="$1"
-    local padding=$(( BOX_WIDTH - ${#content} ))
+    local width=${BOX_WIDTH:-76}
+    local content_length=${#content}
+    local padding=$(( width - content_length ))
     if (( padding < 0 )); then
-        # Truncate if too long
-        content=${content:0:BOX_WIDTH}
+        content="${content:0:width}"
         padding=0
     fi
     echo ""
-    echo "═╬═════════════════════════════════════════════════════════════════════════════╬═"
+    # Top border (width + 4 for the walls and spaces)
+    echo "═╬$(printf '═%.0s' $(seq 1 $width))╬═"
+    # Content line
     printf " ║ %s%*s ║\n" "$content" "$padding" ""
-    echo "═╬═════════════════════════════════════════════════════════════════════════════╬═"
+    # Bottom border
+    echo "═╬$(printf '═%.0s' $(seq 1 $width))╬═"
     echo ""
 }
 
