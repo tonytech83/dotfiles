@@ -174,7 +174,7 @@ installOhMyPosh() {
     fi
 
     # Install Oh My Posh
-    if ! curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
+    if ! curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/bin; then
         echo "${RED}Something went wrong during Oh My Posh install!${RC}"
         exit 1
     fi
