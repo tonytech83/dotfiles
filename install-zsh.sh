@@ -13,12 +13,16 @@ SUDO_CMD=""
 SUGROUP=""
 GITPATH=""
 
-# Function to check if a command exists
+##################################################################################
+#####   Function to check if a command exists
+##################################################################################
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Function to check the environment for necessary tools and permissions
+##################################################################################
+#####   Function to check the environment for necessary tools and permissions
+##################################################################################
 checkEnv() {
     # Check for required commands
     REQUIREMENTS="curl sudo"
@@ -61,8 +65,9 @@ checkEnv() {
     fi
 }
 
-
-# Function to install dependencies
+##################################################################################
+#####   Function to install dependencies
+##################################################################################
 installDepend() {
     # List of dependencies to install (space-separated, not quoted)
     DEPENDENCIES="stow lsd curl tree wget unzip fontconfig"
@@ -98,7 +103,9 @@ installDepend() {
     fi
 }
 
-# Function to install zsh
+##################################################################################
+#####   Function to install zsh
+##################################################################################
 installZsh() {
   if ! command_exists zsh; then
     printf "%b\n" "${YELLOW}Installing Zsh...${RC}"
@@ -118,7 +125,9 @@ installZsh() {
   fi
 }
 
-# Function to install fzf
+##################################################################################
+#####   Function to install fzf
+##################################################################################
 installFzf() {
     if command_exists fzf || [ -d "$HOME/.fzf" ]; then
         echo "Fzf already installed"
@@ -132,7 +141,9 @@ installFzf() {
     fi
 }
 
-# Function to install Zoxide
+##################################################################################
+#####   Function to install Zoxide
+##################################################################################
 installZoxide() {
     if command_exists zoxide; then
         echo "Zoxide already installed"
@@ -146,7 +157,9 @@ installZoxide() {
     fi
 }
 
-# Function to install Oh My Posh
+##################################################################################
+##### Function to install Oh My Posh
+##################################################################################
 installOhMyPosh() {
     if command_exists oh-my-posh; then
         echo "Oh My Posh already installed"
@@ -211,7 +224,27 @@ setupZshConfig() {
     fi
 }
 
-# Execute the functions in order
+echo ""
+echo ""
+
+clear
+echo ""
+echo ""
+echo "Let's figure out which OS / Distro you are running."
+echo ""
+echo ""
+echo "    From some basic information on your system, you appear to be running: "
+echo "        --  OS Name        " $(lsb_release -i)
+echo "        --  Description        " $(lsb_release -d)
+echo "        --  OS Version        " $(lsb_release -r)
+echo "        --  Code Name        " $(lsb_release -c)
+echo ""
+echo "------------------------------------------------------"
+echo ""
+
+##################################################################################
+#####   Execute the functions in order
+##################################################################################
 checkEnv
 installZsh
 installDepend
