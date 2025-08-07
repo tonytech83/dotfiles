@@ -1,13 +1,13 @@
-#!/bin/sh -e
+#!/bin/sh
 
 # Global fixed width (inside the box)
 BOX_WIDTH=76
 
 # Define color codes for output
-RC='\033[0m'
-RED='\033[31m'
-YELLOW='\033[33m'
-GREEN='\033[32m'
+RC="$(printf '\033[0m')"
+RED="$(printf '\033[31m')"
+YELLOW="$(printf '\033[33m')"
+GREEN="$(printf '\033[32m')"
 
 # Initialize variables for package manager, sudo command, superuser group, and git path
 PACKAGER=""
@@ -17,21 +17,25 @@ REQUIREMENTS=""
 DEPENDENCIES=""
 
 print_action() {
-    local content="$1"
-    local width=${BOX_WIDTH:-76}
-    local content_length=${#content}
-    local padding=$(( width - content_length ))
-    if (( padding < 0 )); then
-        content="${content:0:width}"
+    content="$1"
+    width=${BOX_WIDTH:-76}
+    stripped_content=$(printf "%s" "$content" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g') # strip ANSI
+    content_length=$(printf "%s" "$stripped_content" | wc -c)
+    inner_width=$((width - 2))  # 1 space before + 1 after
+    padding=$((inner_width - content_length))
+    if [ "$padding" -lt 0 ]; then
+        content=$(printf "%s" "$content" | cut -c1-$inner_width)
         padding=0
     fi
+
     echo ""
-    # Top border (width + 4 for the walls and spaces)
-    echo "═╬$(printf '═%.0s' $(seq 1 $width))╬═"
-    # Content line
+    printf "═╬"
+    printf '═%.0s' $(seq 1 "$width")
+    printf "╬═\n"
     printf " ║ %s%*s ║\n" "$content" "$padding" ""
-    # Bottom border
-    echo "═╬$(printf '═%.0s' $(seq 1 $width))╬═"
+    printf "═╬"
+    printf '═%.0s' $(seq 1 "$width")
+    printf "╬═\n"
     echo ""
 }
 
@@ -47,6 +51,9 @@ command_exists() {
 #####   Function to check the environment for necessary tools and permissions
 ##################################################################################
 checkEnv() {
+
+    print_action "${YELLOW}Check the environment for necessary tools and permissions${RC}"
+
     # Check for required commands
     REQUIREMENTS="curl sudo"
     for req in $REQUIREMENTS; do
@@ -95,8 +102,7 @@ installDepend() {
     # List of dependencies to install (space-separated, not quoted)
     DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
 
-    print_action "Installing dependencies..." 
-    echo "${YELLOW}Installing dependencies...${RC}"
+    print_action "${YELLOW}Installing dependencies...${RC}" 
 
     if [ "$PACKAGER" = "pacman" ]; then
         # Install AUR helper if not present
@@ -133,6 +139,9 @@ installDepend() {
 #####   Function to install zsh
 ##################################################################################
 installZsh() {
+
+    print_action "${YELLOW}Installing ZSH${RC}" 
+
     if ! command_exists zsh; then
         printf "%b\n" "${YELLOW}Installing Zsh...${RC}"
         case "$PACKAGER" in
@@ -155,8 +164,11 @@ installZsh() {
 #####   Function to install fzf
 ##################################################################################
 installFzf() {
+
+    print_action "${YELLOW}Installing FZF${RC}" 
+
     if command_exists fzf || [ -d "$HOME/.fzf" ]; then
-        echo "Fzf already installed"
+        echo "${GREEN}Fzf already installed${RC}"
     else
         echo "${YELLOW}Installing Fzf...${RC}"
         ${SUDO_CMD} "${PACKAGER}" install -y fzf 2>/dev/null || {
@@ -171,13 +183,18 @@ installFzf() {
 #####   Function to install Zoxide
 ##################################################################################
 installZoxide() {
+
+    print_action "${YELLOW}Installing ZOXIDE${RC}" 
+
     if command_exists zoxide; then
-        echo "Zoxide already installed"
+        echo "${GREEN}Zoxide already installed${RC}"
         return
     fi
 
-    # Install Zoxide
-    if ! curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh; then
+        # Install Zoxide
+    if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh; then
+        echo "${GREEN}Successfully installed zoxide${RC}"
+    else
         echo "${RED}Something went wrong during zoxide install!${RC}"
         exit 1
     fi
@@ -187,8 +204,12 @@ installZoxide() {
 ##### Function to install Oh My Posh
 ##################################################################################
 installOhMyPosh() {
+
+    print_action "${YELLOW}Installing Oh My Posh${RC}" 
+
+
     if command_exists oh-my-posh; then
-        echo "Oh My Posh already installed"
+        echo "${GREEN}Oh My Posh already installed${RC}"
         return
     fi
 
@@ -208,6 +229,9 @@ installOhMyPosh() {
 }
 
 setupZshConfig() {
+
+    print_action "${YELLOW}Setup ZSH configuration...${RC}"
+
     # Clone dotfiles repo
     cd ~/dotfiles
 
@@ -219,6 +243,7 @@ setupZshConfig() {
 
     # Create a dry run first to check for conflicts
     echo "${YELLOW}Checking for potential conflicts...${RC}"
+
     if ! stow -n .; then
         echo "${RED}Stow detected conflicts. Please check the output above.${RC}"
         echo "${YELLOW}You may need to manually resolve conflicts.${RC}"
@@ -227,6 +252,7 @@ setupZshConfig() {
 
     # If dry run successful, perform actual stow
     echo "${YELLOW}Creating symlinks...${RC}"
+
     if ! stow .; then
         echo "${RED}Failed to create symlinks${RC}"
         exit 1
@@ -245,7 +271,7 @@ setupZshConfig() {
 
     # Optionally source the new configuration
     if [ -f "$HOME/.zshrc" ]; then
-        echo "${YELLOW}Please logout and login again! The installation will continue ...${RC}"
+        echo "${YELLOW}Please execute 'exec zhs'! The installation will continue ...${RC}"
     fi
 }
 
