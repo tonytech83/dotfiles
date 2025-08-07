@@ -6,13 +6,14 @@ Contains dotfiles
 
 - git
 - stow
+- ca-certificates
 
 ## Installation
 
 ### 1. Install requirements
 - Debian
   ```sh
-  sudo apt update && sudo apt install -y git curl
+  sudo apt update && sudo apt install -y git curl ca-certificates
   ```
 
 - Arch Linux
@@ -42,4 +43,9 @@ chmod +x install-zsh.sh
 ### 4. To install `.zshrc` configuration, execute the following command in your terminal:
 ```sh
 ./install-zsh.sh
+```
+
+### 5. Restart the shell
+```sh
+exec zsh
 ```
