@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+# Global fixed width (inside the box)
+BOX_WIDTH=76
+
 # Define color codes for output
 RC='\033[0m'
 RED='\033[31m'
@@ -8,7 +11,26 @@ GREEN='\033[32m'
 
 # Initialize variables for package manager, sudo command, superuser group, and git path
 PACKAGER=""
+PACKAGEMANAGER=""
 SUDO_CMD=""
+REQUIREMENTS=""
+DEPENDENCIES=""
+
+print_action() {
+    local content="$1"
+    local padding=$(( BOX_WIDTH - ${#content} ))
+    if (( padding < 0 )); then
+        # Truncate if too long
+        content=${content:0:BOX_WIDTH}
+        padding = 0
+    fi
+    echo ""
+    echo "═╬═════════════════════════════════════════════════════════════════════════════╬═"
+    printf " ║ %s%*s ║\n" "$content" "$padding" ""
+    echo "═╬═════════════════════════════════════════════════════════════════════════════╬═"
+    echo ""
+}
+
 
 ##################################################################################
 #####   Function to check if a command exists
@@ -69,6 +91,7 @@ installDepend() {
     # List of dependencies to install (space-separated, not quoted)
     DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
 
+    print_acton("Installing dependencies...")
     echo "${YELLOW}Installing dependencies...${RC}"
 
     if [ "$PACKAGER" = "pacman" ]; then
@@ -224,20 +247,26 @@ setupZshConfig() {
 
 echo ""
 echo ""
+# Define and format output using printf to control line width (80 characters)
+os_name=$(lsb_release -i | cut -f2-)
+desc=$(lsb_release -d | cut -f2-)
+version=$(lsb_release -r | cut -f2-)
+codename=$(lsb_release -c | cut -f2-)
 
 clear
 echo ""
-echo ""
-echo "Let's figure out which OS / Distro you are running."
-echo ""
-echo ""
-echo "    From some basic information on your system, you appear to be running: "
-echo "        --  OS Name        " $(lsb_release -i)
-echo "        --  Description        " $(lsb_release -d)
-echo "        --  OS Version        " $(lsb_release -r)
-echo "        --  Code Name        " $(lsb_release -c)
-echo ""
-echo "------------------------------------------------------"
+echo "═╬══════════════════════════════════════════════════════════════════════════════╬═"
+echo " ║                                                                              ║"
+echo " ║               Let's figure out which OS / Distro you are running.            ║"
+echo " ║                                                                              ║"
+echo " ║                                                                              ║"
+echo " ║    From some basic information on your system, you appear to be running:     ║"
+printf " ║       --  OS Name        : %-49s ║\n" "$os_name"
+printf " ║       --  Description    : %-49s ║\n" "$desc"
+printf " ║       --  OS Version     : %-49s ║\n" "$version"
+printf " ║       --  Code Name      : %-49s ║\n" "$codename"
+echo " ║                                                                              ║"
+echo "═╬══════════════════════════════════════════════════════════════════════════════╬═"
 echo ""
 
 ##################################################################################
