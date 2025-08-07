@@ -22,7 +22,7 @@ print_action() {
     if (( padding < 0 )); then
         # Truncate if too long
         content=${content:0:BOX_WIDTH}
-        padding = 0
+        padding=0
     fi
     echo ""
     echo "═╬═════════════════════════════════════════════════════════════════════════════╬═"
@@ -91,7 +91,7 @@ installDepend() {
     # List of dependencies to install (space-separated, not quoted)
     DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
 
-    print_acton("Installing dependencies...")
+    print_action "Installing dependencies..." 
     echo "${YELLOW}Installing dependencies...${RC}"
 
     if [ "$PACKAGER" = "pacman" ]; then
