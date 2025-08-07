@@ -68,7 +68,7 @@ checkEnv() {
     for pgm in $PACKAGEMANAGER; do
         if command_exists "$pgm"; then
             PACKAGER="$pgm"
-            echo "Using package manager: $pgm"
+            echo "Using ${GREEN}$pgm${RC} for package manager."
             break
         fi
     done
@@ -85,10 +85,10 @@ checkEnv() {
         echo "${YELLOW}Running as root, sudo is not needed.${RC}"
     elif command_exists sudo; then
         SUDO_CMD="sudo"
-        echo "Using sudo for privilege escalation."
+        echo "Using ${GREEN}sudo${RC} for privilege escalation."
     elif command_exists doas && [ -f "/etc/doas.conf" ]; then
         SUDO_CMD="doas"
-        echo "Using doas for privilege escalation."
+        echo "Using ${GREEN}doas${RC} for privilege escalation."
     else
         echo "${RED}No suitable privilege escalation tool found (sudo/doas).${RC}"
         exit 1
@@ -155,8 +155,9 @@ installZsh() {
             $SUDO_CMD "$PACKAGER" install -y zsh
             ;;
         esac
+        echo "${GREEN}  --> Successfully installed ZSH.${RC}"
     else
-        printf "%b\n" "${GREEN}ZSH is already installed.${RC}"
+        printf "%b\n" "${GREEN} --> ZSH is already installed.${RC}"
     fi
 }
 
@@ -176,6 +177,7 @@ installFzf() {
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
         }
+        echo "${GREEN}  --> Successfully installed FZF.${RC}"
     fi
 }
 
@@ -187,13 +189,13 @@ installZoxide() {
     print_action "${YELLOW}Installing ZOXIDE${RC}" 
 
     if command_exists zoxide; then
-        echo "${GREEN}Zoxide already installed${RC}"
+        echo "${GREEN}  --> Zoxide already installed${RC}"
         return
     fi
 
-        # Install Zoxide
+    # Install Zoxide
     if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh; then
-        echo "${GREEN}Successfully installed zoxide${RC}"
+        echo "${GREEN}  --> Successfully installed zoxide${RC}"
     else
         echo "${RED}Something went wrong during zoxide install!${RC}"
         exit 1
@@ -222,7 +224,9 @@ installOhMyPosh() {
     fi
 
     # Install Oh My Posh
-    if ! curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
+    if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
+        echo "${GREEN}  --> Successfully installed Oh My Posh${RC}"
+    else
         echo "${RED}Something went wrong during Oh My Posh install!${RC}"
         exit 1
     fi
@@ -271,7 +275,7 @@ setupZshConfig() {
 
     # Optionally source the new configuration
     if [ -f "$HOME/.zshrc" ]; then
-        echo "${YELLOW}Please execute 'exec zhs'! The installation will continue ...${RC}"
+        echo "${YELLOW}Please execute 'exec zsh'! The installation will continue ...${RC}"
     fi
 }
 
