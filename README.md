@@ -22,12 +22,12 @@ Contains dotfiles
 
 - Fedora
   ```sh
-  sudo dnf install git curl
+  sudo dnf install -y -q git curl
   ```
 
 - OpenSUSE
   ```sh
-  sudo zypper install git curl
+  sudo zypper install -n git curl
   ```
 
 ### 2. Checkout the repo in your $HOME folder using git.
@@ -39,7 +39,7 @@ cd dotfiles
 ```sh
 chmod +x install-zsh.sh
 ```
-3. To install `.zshrc` configuration, execute the following command in your terminal:
+### 4. To install `.zshrc` configuration, execute the following command in your terminal:
 ```sh
 ./install-zsh.sh
 ```

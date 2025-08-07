@@ -6,12 +6,9 @@ RED='\033[31m'
 YELLOW='\033[33m'
 GREEN='\033[32m'
 
-
 # Initialize variables for package manager, sudo command, superuser group, and git path
 PACKAGER=""
 SUDO_CMD=""
-SUGROUP=""
-GITPATH=""
 
 ##################################################################################
 #####   Function to check if a command exists
@@ -34,7 +31,7 @@ checkEnv() {
     done
 
     # Determine the package manager to use
-    PACKAGEMANAGER="apt dnf yum pacman zypper apk"
+    PACKAGEMANAGER="apt dnf yum pacman zypper"
     for pgm in $PACKAGEMANAGER; do
         if command_exists "$pgm"; then
             PACKAGER="$pgm"
@@ -78,7 +75,7 @@ installDepend() {
         # Install AUR helper if not present
         if ! command_exists yay && ! command_exists paru; then
             echo "Installing yay as AUR helper..."
-            ${SUDO_CMD} ${PACKAGER} --noconfirm -S base-devel
+            ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
             cd /opt && ${SUDO_CMD} git clone https://aur.archlinux.org/yay-git.git && ${SUDO_CMD} chown -R "${USER}:${USER}" ./yay-git
             cd yay-git && makepkg --noconfirm -si
         else
@@ -97,9 +94,11 @@ installDepend() {
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
 
     elif [ "$PACKAGER" = "dnf" ]; then
-        ${SUDO_CMD} ${PACKAGER} install -y ${DEPENDENCIES}
+        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
+    elif [ "$PACKAGER" = "zypper" ]; then
+        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
     else
-        ${SUDO_CMD} ${PACKAGER} install -yq ${DEPENDENCIES}
+        ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
     fi
 }
 
@@ -107,22 +106,22 @@ installDepend() {
 #####   Function to install zsh
 ##################################################################################
 installZsh() {
-  if ! command_exists zsh; then
-    printf "%b\n" "${YELLOW}Installing Zsh...${RC}"
-      case "$PACKAGER" in
-          pacman)
-              $SUDO_CMD $PACKAGER -S --needed --noconfirm zsh
-              ;;
-          apk)
-              $SUDO_CMD $PACKAGER add zsh
-              ;;
-          *)
-              $SUDO_CMD $PACKAGER install -y zsh
-              ;;
-      esac
-  else
-      printf "%b\n" "${GREEN}ZSH is already installed.${RC}"
-  fi
+    if ! command_exists zsh; then
+        printf "%b\n" "${YELLOW}Installing Zsh...${RC}"
+        case "$PACKAGER" in
+        pacman)
+            $SUDO_CMD "$PACKAGER" -S --needed --noconfirm zsh
+            ;;
+        apk)
+            $SUDO_CMD "$PACKAGER" add zsh
+            ;;
+        *)
+            $SUDO_CMD "$PACKAGER" install -y zsh
+            ;;
+        esac
+    else
+        printf "%b\n" "${GREEN}ZSH is already installed.${RC}"
+    fi
 }
 
 ##################################################################################
@@ -133,7 +132,7 @@ installFzf() {
         echo "Fzf already installed"
     else
         echo "${YELLOW}Installing Fzf...${RC}"
-        ${SUDO_CMD} ${PACKAGER} install -y fzf 2>/dev/null || {
+        ${SUDO_CMD} "${PACKAGER}" install -y fzf 2>/dev/null || {
             echo "${YELLOW}Fzf not available in package manager. Cloning from GitHub...${RC}"
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
@@ -182,7 +181,7 @@ installOhMyPosh() {
 }
 
 setupZshConfig() {
-	# Clone dotfiles repo
+    # Clone dotfiles repo
     cd ~/dotfiles
 
     # Check if stow is available
@@ -206,7 +205,6 @@ setupZshConfig() {
         exit 1
     fi
 
-
     # Verify critical files were linked
     if [ ! -L "$HOME/.zshrc" ]; then
         echo "${RED}Failed to create .zshrc symlink${RC}"
@@ -214,13 +212,13 @@ setupZshConfig() {
     fi
 
     # Change default shell to zsh for current user
-    sudo chsh -s $(which zsh) $USER
+    sudo chsh -s "$(which zsh)" "$USER"
 
     echo "${GREEN}ZSH configuration setup completed successfully!${RC}"
 
     # Optionally source the new configuration
     if [ -f "$HOME/.zshrc" ]; then
-    	echo "${YELLOW}Please logout and login again! The installation will continue ...${RC}"
+        echo "${YELLOW}Please logout and login again! The installation will continue ...${RC}"
     fi
 }
 
