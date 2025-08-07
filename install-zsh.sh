@@ -67,7 +67,7 @@ checkEnv() {
 ##################################################################################
 installDepend() {
     # List of dependencies to install (space-separated, not quoted)
-    DEPENDENCIES="stow lsd curl tree wget unzip fontconfig"
+    DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
 
     echo "${YELLOW}Installing dependencies...${RC}"
 
