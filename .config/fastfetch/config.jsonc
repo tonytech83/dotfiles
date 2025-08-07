@@ -1,146 +1,146 @@
 /* ----------- 💫 https://github.com/JaKooLit 💫 -------- */
 
 {
-"$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-"logo": {
-  //"source": "~/.config/fastfetch/nixos.png",
-  //"type": "kitty-direct",
-  "height": 15,
-  "width": 30,
-  "padding": {
-    "top": 1
-    }
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    //"source": "~/.config/fastfetch/nixos.png",
+    //"type": "kitty-direct",
+    "height": 15,
+    "width": 30,
+    "padding": {
+      "top": 1,
+    },
   },
-"display": {
-  "separator": " ➜  "
-},
+  "display": {
+    "separator": " ➜  ",
+  },
 
-"modules": [
-  "break",
-  {
-    "type": "os",
-    "key": " DISTRO",
-    "keyColor": "31",
-  },
-  {
-    "type": "kernel",
-    "key": " ├  ",
-    "keyColor": "31",
-  },
-  {
-    "type": "packages",
-    "key": " ├ 󰏖 ",
-    "keyColor": "31",
-  },
-  {
-    "type": "uptime",
-    "key": " ├ 󰅐 ",
-    "keyColor": "31"
-  },
-  {
-    "type": "command",
-    "key": " ├ 󰅐 ",
-    "keyColor": "31",
-    "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
-  },
-  {
-    "type": "shell",
-    "key": " └  ",
-    "keyColor": "31",
-  },
-  "break",
-  {
-    "type": "wm",
-    "key": " DE/WM",
-    "keyColor": "32",
-  },
-  {
-    "type": "wmtheme",
-    "key": " ├ 󰉼 ",
-    "keyColor": "32",
-  },
-  {
-    "type": "icons",
-    "key": " ├ 󰀻 ",
-    "keyColor": "32",
-  },
-  {
-    "type": "cursor",
-    "key": " ├  ",
-    "keyColor": "32",
-  },
-  {
-    "type": "terminal",
-    "key": " ├  ",
-    "keyColor": "32",
-  },
-  {
-    "type": "terminalfont",
-    "key": " └  ",
-    "keyColor": "32",
-  },
-  "break",
-  {
-    "type": "host",
-    "format": "{2}",
-    "key": "󰌢 SYSTEM",
-    "keyColor": "33",
-  },
-  {
-    "type": "cpu",
-    "format": "{1} ({3}) @ {7} GHz",
-    "key": " ├  ",
-    "keyColor": "33",
-  },
-  {
-    "type": "gpu",
-    "format": "{2}",
-    "key": " ├ 󰢮 ",
-    "keyColor": "33",
-  },
-  {
-    "type": "memory",
-    "key": " ├  ",
-    "keyColor": "33",
-  },
-  {
-    "type": "swap",
-    "key": " ├ 󰓡 ",
-    "keyColor": "33",
-  },
-  {
-    "type": "disk",
-    "key": " ├ 󰋊 ",
-    "keyColor": "33",
-  },
-  {
-    "type": "display",
-    "key": " └  ",
-    "compactType": "original-with-refresh-rate",
-    "keyColor": "33",
-  },
-  "break",
-  {
-    "type": "sound",
-    "key": " AUDIO",
-    "format": "{2}",
-    "keyColor": "magenta"
+  "modules": [
+    "break",
+    {
+      "type": "os",
+      "key": " DISTRO",
+      "keyColor": "31",
     },
     {
-    "type": "player",
-    "key": " ├ 󰥠 ",
-    "keyColor": "magenta"
+      "type": "kernel",
+      "key": " ├  ",
+      "keyColor": "31",
     },
     {
-    "type": "media",
-    "key": " └ 󰝚 ",
-    "keyColor": "magenta"
+      "type": "packages",
+      "key": " ├ 󰏖 ",
+      "keyColor": "31",
+    },
+    {
+      "type": "uptime",
+      "key": " ├ 󰔟 ",
+      "keyColor": "31",
+    },
+    {
+      "type": "command",
+      "key": " ├ 󰅐 ",
+      "keyColor": "31",
+      "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days",
+    },
+    {
+      "type": "shell",
+      "key": " └  ",
+      "keyColor": "31",
     },
     "break",
-  {
-    "type": "custom",
-    "format": "\u001b[90m  \u001b[31m  \u001b[32m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  \u001b[37m  \u001b[38m  \u001b[39m  \u001b[39m    \u001b[38m  \u001b[37m  \u001b[36m  \u001b[35m  \u001b[34m  \u001b[33m  \u001b[32m  \u001b[31m  \u001b[90m "
+    {
+      "type": "wm",
+      "key": " DE/WM",
+      "keyColor": "32",
     },
-  "break"
-]
+    {
+      "type": "wmtheme",
+      "key": " ├ 󰉼 ",
+      "keyColor": "32",
+    },
+    {
+      "type": "icons",
+      "key": " ├ 󰀻 ",
+      "keyColor": "32",
+    },
+    {
+      "type": "cursor",
+      "key": " ├  ",
+      "keyColor": "32",
+    },
+    {
+      "type": "terminal",
+      "key": " ├  ",
+      "keyColor": "32",
+    },
+    {
+      "type": "terminalfont",
+      "key": " └  ",
+      "keyColor": "32",
+    },
+    "break",
+    {
+      "type": "host",
+      "format": "{2}",
+      "key": "󰌢 SYSTEM",
+      "keyColor": "33",
+    },
+    {
+      "type": "cpu",
+      "format": "{1} ({3}) @ {7} GHz",
+      "key": " ├  ",
+      "keyColor": "33",
+    },
+    {
+      "type": "gpu",
+      "format": "{2}",
+      "key": " ├ 󰢮 ",
+      "keyColor": "33",
+    },
+    {
+      "type": "memory",
+      "key": " ├  ",
+      "keyColor": "33",
+    },
+    {
+      "type": "swap",
+      "key": " ├ 󰓡 ",
+      "keyColor": "33",
+    },
+    {
+      "type": "disk",
+      "key": " ├ 󰋊 ",
+      "keyColor": "33",
+    },
+    {
+      "type": "display",
+      "key": " └  ",
+      "compactType": "original-with-refresh-rate",
+      "keyColor": "33",
+    },
+    "break",
+    {
+      "type": "sound",
+      "key": " AUDIO",
+      "format": "{2}",
+      "keyColor": "magenta",
+    },
+    {
+      "type": "player",
+      "key": " ├ 󰥠 ",
+      "keyColor": "magenta",
+    },
+    {
+      "type": "media",
+      "key": " └ 󰝚 ",
+      "keyColor": "magenta",
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "\u001b[90m  \u001b[31m  \u001b[32m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  \u001b[37m  \u001b[38m  \u001b[39m  \u001b[39m    \u001b[38m  \u001b[37m  \u001b[36m  \u001b[35m  \u001b[34m  \u001b[33m  \u001b[32m  \u001b[31m  \u001b[90m ",
+    },
+    "break",
+  ],
 }
