@@ -155,9 +155,9 @@ installZsh() {
             $SUDO_CMD "$PACKAGER" install -y zsh
             ;;
         esac
-        echo "${GREEN}  --> Successfully installed ZSH.${RC}"
+        echo "${GREEN}  ==> Successfully installed ZSH.${RC}"
     else
-        printf "%b\n" "${GREEN} --> ZSH is already installed.${RC}"
+        printf "%b\n" "${GREEN}  ==> ZSH is already installed.${RC}"
     fi
 }
 
@@ -177,7 +177,7 @@ installFzf() {
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
         }
-        echo "${GREEN}  --> Successfully installed FZF.${RC}"
+        echo "${GREEN}  ==> Successfully installed FZF.${RC}"
     fi
 }
 
@@ -195,7 +195,7 @@ installZoxide() {
 
     # Install Zoxide
     if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh; then
-        echo "${GREEN}  --> Successfully installed zoxide${RC}"
+        echo "${GREEN}  ==> Successfully installed zoxide${RC}"
     else
         echo "${RED}Something went wrong during zoxide install!${RC}"
         exit 1
@@ -225,7 +225,7 @@ installOhMyPosh() {
 
     # Install Oh My Posh
     if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
-        echo "${GREEN}  --> Successfully installed Oh My Posh${RC}"
+        echo "${GREEN}  ==> Successfully installed Oh My Posh${RC}"
     else
         echo "${RED}Something went wrong during Oh My Posh install!${RC}"
         exit 1
