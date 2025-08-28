@@ -34,6 +34,7 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
+zinit snippet OMZP::grc
 # uncomment and write down plugin for your distribution
 # zinit snippet OMZP::archlinux
 
@@ -109,5 +110,26 @@ fi
 unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
 
-# Load Generic Colouriser
-[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+# Load Generic Colouriser (grc)
+#export GRC_ALIASES=true
+#export GRC_ALIASES_ROOT=true
+#export GRC_OPTIONS='--colour=auto'
+
+# OMZ grc plugin already loaded above; now also source the distro scripts
+#[[ -r /etc/grc.zsh ]] && source /etc/grc.zsh           			# zsh-friendly aliases
+#[[ -r /etc/profile.d/grc.sh ]] && source /etc/profile.d/grc.sh  # adds tail, etc.
+
+# ---- Auto-load grc aliases for zsh (no per-cmd typing) ----
+if command -v grc >/dev/null 2>&1 && [[ -r /etc/profile.d/grc.sh ]]; then
+  export GRC_OPTIONS='--colour=auto'
+  # Read the alias targets from the distro file and create zsh aliases
+  load_grc_aliases() {
+    local cmd
+    # grab all command names from lines like: alias tail='colourify tail'
+    for cmd in $(awk -F"'" '/^[[:space:]]*alias[[:space:]]+/ {print $2}' /etc/profile.d/grc.sh); do
+      alias "$cmd"="grc ${GRC_OPTIONS} $cmd"
+    done
+  }
+  load_grc_aliases
+fi
+# -----------------------------------------------------------
