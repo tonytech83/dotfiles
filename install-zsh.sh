@@ -100,7 +100,7 @@ checkEnv() {
 ##################################################################################
 installDepend() {
     # List of dependencies to install (space-separated, not quoted)
-    DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
+    DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates grc"
 
     print_action "${YELLOW}Installing dependencies...${RC}" 
 

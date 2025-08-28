@@ -94,7 +94,7 @@ setopt hist_find_no_dups
 OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
 
 if command -v oh-my-posh >/dev/null; then
-    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
+    eval "$(oh-my-posh init zsh --config https://raw.githubusercontent.com/tonytech83/powershell-profile/refs/heads/main/themes/minimal.toml)"
 else
     echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
 fi
@@ -102,6 +102,12 @@ fi
 ##################################################################################
 ## Shell integration
 ##################################################################################
+# Load fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Load zoxide
 unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
+
+# Load Generic Colouriser
+[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
