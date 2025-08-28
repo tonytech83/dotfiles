@@ -84,16 +84,9 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 ##################################################################################
-## Aliases
+# Load aliases
 ##################################################################################
-alias ls='lsd -a --group-directories-first'
-alias la='lsd -Al --group-directories-first --color auto'
-alias c='clear'
-
-##################################################################################
-# Load Oh-My-Posh if installed
-##################################################################################
-[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
+[[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 
 #######################################################
 ## Load Oh-My-Posh if installed
