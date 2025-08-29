@@ -2,12 +2,7 @@
 ##### EXPORTS
 ##################################################################################
 export PATH=$PATH:"$HOME/.local/bin"
-
-##################################################################################
-## Setup Zinit and plugins
-##################################################################################
-# Set the directory we will store zinit
-export PATH=$PATH:"$HOME/.local/bin"
+#export PATH=$PATH:"$HOME/.fzf/bin/fzf"
 
 ##################################################################################
 ## Setup Zinit and plugins
@@ -23,6 +18,7 @@ fi
 
 # Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
+unalias zi 2>/dev/null
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -35,6 +31,11 @@ zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::grc
+zinit snippet OMZP::zoxide
+zinit snippet OMZP::vagrant
+zinit snippet OMZP::uv
+zinit snippet OMZP::fzf
+
 # uncomment and write down plugin for your distribution
 # zinit snippet OMZP::archlinux
 
@@ -107,7 +108,7 @@ fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Load zoxide
-unalias zi 2>/dev/null
+# unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
 
 # Load Generic Colouriser (grc)
