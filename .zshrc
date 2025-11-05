@@ -6,12 +6,6 @@ export PATH=$PATH:"$HOME/.local/bin"
 ##################################################################################
 ## Setup Zinit and plugins
 ##################################################################################
-# Set the directory we will store zinit
-export PATH=$PATH:"$HOME/.local/bin"
-
-##################################################################################
-## Setup Zinit and plugins
-##################################################################################
 # Set the directory for Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -69,7 +63,7 @@ bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 
 ##################################################################################
-# History
+## History
 ##################################################################################
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -85,13 +79,6 @@ setopt hist_find_no_dups
 
 ##################################################################################
 ## Aliases
-##################################################################################
-alias ls='lsd -a --group-directories-first'
-alias la='lsd -Al --group-directories-first --color auto'
-alias c='clear'
-
-##################################################################################
-# Load Oh-My-Posh if installed
 ##################################################################################
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 
