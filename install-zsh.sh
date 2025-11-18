@@ -288,27 +288,31 @@ version=$(lsb_release -r | cut -f2-)
 codename=$(lsb_release -c | cut -f2-)
 
 clear
-echo ""
-echo "═╬══════════════════════════════════════════════════════════════════════════════╬═"
-echo " ║                                                                              ║"
-echo " ║                                        /$$                                   ║"
-echo " ║                                        | $$                                  ║"
-echo " ║                     /$$$$$$$$  /$$$$$$$| $$$$$$$                             ║"
-echo " ║                    |____ /$$/ /$$_____/| $$__  $$                            ║"
-echo " ║                        /$$$$/ |  $$$$$$ | $$  \ $$                           ║"
-echo " ║                       /$$__/   \____  $$| $$  | $$                           ║"
-echo " ║                      /$$$$$$$$ /$$$$$$$/| $$  | $$                           ║"
-echo " ║                     |________/|_______/ |__/  |__/                           ║"
-echo " ║                                                                              ║"
-echo " ║                                                                              ║"
-echo " ║    From some basic information on your system, you appear to be running:     ║"
-printf " ║       --  OS Name        : %-49s ║\n" "$os_name"
-printf " ║       --  Description    : %-49s ║\n" "$desc"
-printf " ║       --  OS Version     : %-49s ║\n" "$version"
-printf " ║       --  Code Name      : %-49s ║\n" "$codename"
-echo " ║                                                                              ║"
-echo "═╬══════════════════════════════════════════════════════════════════════════════╬═"
-echo ""
+cat << 'EOF'
+
+═╬═════════════════════════════════════════════════════════════════════════════╬═
+ ║                                                                             ║
+ ║                                        /$$                                  ║
+ ║                                        | $$                                 ║
+ ║                     /$$$$$$$$  /$$$$$$$| $$$$$$$                            ║
+ ║                    |____ /$$/ /$$_____/| $$__  $$                           ║
+ ║                       /$$$$/ |  $$$$$$ | $$  \ $$                           ║
+ ║                      /$$__/   \____  $$| $$  | $$                           ║
+ ║                     /$$$$$$$$ /$$$$$$$/| $$  | $$                           ║
+ ║                    |________/|_______/ |__/  |__/                           ║
+ ║                                                                             ║
+ ║                                                                             ║
+ ║    From some basic information on your system, you appear to be running:    ║
+EOF
+printf " ║       --  OS Name        : %-48s ║\n" "$os_name"
+printf " ║       --  Description    : %-48s ║\n" "$desc"
+printf " ║       --  OS Version     : %-48s ║\n" "$version"
+printf " ║       --  Code Name      : %-48s ║\n" "$codename"
+cat << 'EOF'
+ ║                                                                             ║
+═╬═════════════════════════════════════════════════════════════════════════════╬═
+
+EOF
 
 ##################################################################################
 #####   Execute the functions in order
