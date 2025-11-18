@@ -61,7 +61,7 @@ command_exists() {
 ##################################################################################
 checkEnv() {
 
-    print_action "${BOLD}${YELLOW}Check the environment for necessary tools and permissions${RC}"
+    print_action "${ITALIC}${BOLD}${YELLOW}Check the environment for necessary tools and permissions${RC}"
 
     # Check for required commands
     REQUIREMENTS="curl sudo"
@@ -94,10 +94,10 @@ checkEnv() {
         echo "${BOLD}${YELLOW} ==>${RC} Running as root, sudo is not needed."
     elif command_exists sudo; then
         SUDO_CMD="sudo"
-        echo "${BOLD} ==>${RC} Using ${GREEN}sudo${RC} for privilege escalation."
+        echo "${BOLD} ==>${RC} Using ${BOLD}${GREEN}sudo${RC} for privilege escalation."
     elif command_exists doas && [ -f "/etc/doas.conf" ]; then
         SUDO_CMD="doas"
-        echo "${BOLD} ==>${RC} Using ${GREEN}doas${RC} for privilege escalation."
+        echo "${BOLD} ==>${RC} Using ${BOLD}${GREEN}doas${RC} for privilege escalation."
     else
         echo "${BOLD}${RED} ==>${RC} No suitable privilege escalation tool found (sudo/doas)."
         exit 1
@@ -111,7 +111,7 @@ installDepend() {
     # List of dependencies to install (space-separated, not quoted)
     DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
 
-    print_action "${BOLD}${YELLOW}Installing dependencies...${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing dependencies...${RC}" 
 
     if [ "$PACKAGER" = "pacman" ]; then
         # Install AUR helper if not present
@@ -149,10 +149,10 @@ installDepend() {
 ##################################################################################
 installZsh() {
 
-    print_action "${BOLD}${YELLOW}Installing ZSH${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing zsh${RC}" 
 
     if ! command_exists zsh; then
-        printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing Zsh..."
+        printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing ${BOLD}zsh${RC}..."
         case "$PACKAGER" in
         pacman)
             $SUDO_CMD "$PACKAGER" -S --needed --noconfirm zsh
@@ -164,9 +164,9 @@ installZsh() {
             $SUDO_CMD "$PACKAGER" install -y zsh
             ;;
         esac
-        echo "${BOLD}${GREEN} ==>${RC} Successfully installed ZSH."
+        echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}zsh${RC}."
     else
-        printf "%b\n" "${BOLD}${GREEN} ==>${RC} ZSH is already installed."
+        printf "%b\n" "${BOLD}${GREEN} ==>${RC} ${BOLD}zsh${RC} is already installed."
     fi
 }
 
@@ -175,7 +175,7 @@ installZsh() {
 ##################################################################################
 installFzf() {
 
-    print_action "${BOLD}${YELLOW}Installing fzf${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing fzf${RC}" 
 
     if command_exists fzf || [ -d "$HOME/.fzf" ]; then
         echo "${BOLD}${GREEN} ==>${RC} ${BOLD}fzf${RC} already installed!"
@@ -195,7 +195,7 @@ installFzf() {
 ##################################################################################
 installZoxide() {
 
-    print_action "${BOLD}${YELLOW}Installing Zoxide${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing Zoxide${RC}" 
 
     if command_exists zoxide; then
         echo "${BOLD}${GREEN} ==>${RC} ${BOLD}Zoxide${RC} already installed."
@@ -216,7 +216,7 @@ installZoxide() {
 ##################################################################################
 installOhMyPosh() {
 
-    print_action "${BOLD}${YELLOW}Installing Oh My Posh${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing Oh My Posh${RC}" 
 
 
     if command_exists oh-my-posh; then
@@ -243,7 +243,7 @@ installOhMyPosh() {
 
 setupZshConfig() {
 
-    print_action "${BOLD}${YELLOW}Setup ZSH configuration...${RC}"
+    print_action "${ITALIC}${BOLD}${YELLOW}Setup ZSH configuration...${RC}"
 
     # Clone dotfiles repo
     cd ~/dotfiles
