@@ -254,6 +254,18 @@ setupZshConfig() {
         exit 1
     fi
 
+    # Check if ~/.zshrc exists
+    if [ -f "$HOME/.zshrc" ]; then
+        mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
+        echo "${GREEN}zsh configuration file backup in ~/.zshrc.bak${RC}"
+    fi
+
+    # Check if ~/.nanorc exists
+    if [ -f "$HOME/.nanorc" ]; then
+        mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
+        echo "${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}"
+    fi
+
     # Create a dry run first to check for conflicts
     echo "${BOLD}${YELLOW} ==>${RC} Checking for potential conflicts..."
 
