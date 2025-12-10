@@ -51,7 +51,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 # Add directiry preview
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-#
+# zoxide
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 ##################################################################################
@@ -99,3 +99,6 @@ fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
+
+### Homebrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
