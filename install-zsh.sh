@@ -30,7 +30,7 @@ print_action() {
     width=${BOX_WIDTH:-76}
     stripped_content=$(printf "%s" "$content" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g') # strip ANSI
     content_length=$(printf "%s" "$stripped_content" | wc -c)
-    inner_width=$((width - 2))  # 1 space before + 1 after
+    inner_width=$((width - 2)) # 1 space before + 1 after
     padding=$((inner_width - content_length))
     if [ "$padding" -lt 0 ]; then
         content=$(printf "%s" "$content" | cut -c1-$inner_width)
@@ -47,7 +47,6 @@ print_action() {
     printf "╝\n"
     echo ""
 }
-
 
 ##################################################################################
 #####   Function to check if a command exists
@@ -109,9 +108,9 @@ checkEnv() {
 ##################################################################################
 installDepend() {
     # List of dependencies to install (space-separated, not quoted)
-    DEPENDENCIES="stow lsd curl tree wget unzip fontconfig ca-certificates"
+    DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates"
 
-    print_action "${ITALIC}${BOLD}${YELLOW}Installing dependencies...${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing dependencies...${RC}"
 
     case "$PACKAGER" in
     pacman)
@@ -136,7 +135,7 @@ installDepend() {
         fi
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
         ;;
-    dnf|yum|zypper|apt|apt-get)
+    dnf | yum | zypper | apt | apt-get)
         ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
         ;;
     apk)
@@ -149,11 +148,31 @@ installDepend() {
 }
 
 ##################################################################################
+#####   Function to install eza
+##################################################################################
+installEza() {
+
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing eza${RC}"
+
+    if ! command_exists eza; then
+        printf "%b\n" "${BOLD}${YELLOW} ==>$${RC} Installing ${BOLD}eza${RC}."
+        cd /tmp
+        wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
+        ${SUDO_CMD} chmod +x eza
+        ${SUDO_CMD} chown root:root eza
+        ${SUDO_CMD} mv eza /usr/local/bin/eza
+        echo "${BOLD}${GREEN} ==> ${RC} Successfully installed ${BOLD}eza${RC}."
+    else
+        printf "%b\n" "${BOLD}${GREEN} ==>${RC} ${BOLD}eza${RC} is already installed."
+    fi
+}
+
+##################################################################################
 #####   Function to install zsh
 ##################################################################################
 installZsh() {
 
-    print_action "${ITALIC}${BOLD}${YELLOW}Installing zsh${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing zsh${RC}"
 
     if ! command_exists zsh; then
         printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing ${BOLD}zsh${RC}..."
@@ -179,7 +198,7 @@ installZsh() {
 ##################################################################################
 installFzf() {
 
-    print_action "${ITALIC}${BOLD}${YELLOW}Installing fzf${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing fzf${RC}"
 
     if command_exists fzf || [ -d "$HOME/.fzf" ]; then
         echo "${BOLD}${GREEN} ==>${RC} ${BOLD}fzf${RC} already installed!"
@@ -199,7 +218,7 @@ installFzf() {
 ##################################################################################
 installZoxide() {
 
-    print_action "${ITALIC}${BOLD}${YELLOW}Installing Zoxide${RC}" 
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing Zoxide${RC}"
 
     if command_exists zoxide; then
         echo "${BOLD}${GREEN} ==>${RC} ${BOLD}Zoxide${RC} already installed."
@@ -220,8 +239,7 @@ installZoxide() {
 ##################################################################################
 installOhMyPosh() {
 
-    print_action "${ITALIC}${BOLD}${YELLOW}Installing Oh My Posh${RC}" 
-
+    print_action "${ITALIC}${BOLD}${YELLOW}Installing Oh My Posh${RC}"
 
     if command_exists oh-my-posh; then
         echo "${BOLD}${GREEN} ==>${RC} ${BOLD}Oh My Posh${RC} already installed!"
@@ -262,6 +280,12 @@ setupZshConfig() {
     if [ -f "$HOME/.zshrc" ]; then
         mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
         echo "${GREEN}zsh configuration file backup in ~/.zshrc.bak${RC}"
+    fi
+
+    # Check if ~/.config/eza/theme.yml exists
+    if [ -f "$HOME/.config/eza/theme.yml" ]; then
+        mv "$HOME/.config/eza/theme.yml" "$HOME/.config/eza/theme.yml.bak"
+        echo "${GREEN}eza configuration file backup in ~/.config/eza/theme.yml.bak${RC}"
     fi
 
     # Check if ~/.nanorc exists
@@ -313,7 +337,7 @@ version=$(lsb_release -r | cut -f2-)
 codename=$(lsb_release -c | cut -f2-)
 
 clear
-cat << 'EOF'
+cat <<'EOF'
 
  ╔═════════════════════════════════════════════════════════════════════════════╗
  ║                                                                             ║
@@ -334,7 +358,7 @@ printf " ║       --  ${BOLD}OS Name${RC}        : %-48s ║\n" "$os_name"
 printf " ║       --  ${BOLD}Description${RC}    : %-48s ║\n" "$desc"
 printf " ║       --  ${BOLD}OS Version${RC}     : %-48s ║\n" "$version"
 printf " ║       --  ${BOLD}Code Name      : %-48s ║\n" "$codename"
-cat << 'EOF'
+cat <<'EOF'
  ║                                                                             ║
  ╚═════════════════════════════════════════════════════════════════════════════╝
 
@@ -349,4 +373,5 @@ installDepend
 installOhMyPosh
 installFzf
 installZoxide
+installEza
 setupZshConfig
