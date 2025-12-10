@@ -12,7 +12,7 @@ GREEN="$(printf '\033[32m')"
 BOLD="$(printf '\033[1m')"
 DIM="$(printf '\033[2m')"
 ITALIC="$(printf '\033[3m')"
-UNDcERLINE="$(printf '\033[4m')"
+UNDCERLINE="$(printf '\033[4m')"
 BLINK="$(printf '\033[5m')"
 REVERSE="$(printf '\033[7m')"
 HIDDEN="$(printf '\033[8m')"
@@ -73,7 +73,7 @@ checkEnv() {
     done
 
     # Determine the package manager to use
-    PACKAGEMANAGER="apt dnf yum pacman zypper"
+    PACKAGEMANAGER="apt dnf yum pacman zypper apk"
     for pgm in $PACKAGEMANAGER; do
         if command_exists "$pgm"; then
             PACKAGER="$pgm"
@@ -113,7 +113,8 @@ installDepend() {
 
     print_action "${ITALIC}${BOLD}${YELLOW}Installing dependencies...${RC}" 
 
-    if [ "$PACKAGER" = "pacman" ]; then
+    case "$PACKAGER" in
+    pacman)
         # Install AUR helper if not present
         if ! command_exists yay && ! command_exists paru; then
             echo "${BOLD}${YELLOW} ==>${RC} Installing yay as AUR helper..."
@@ -134,14 +135,17 @@ installDepend() {
             exit 1
         fi
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
-
-    elif [ "$PACKAGER" = "dnf" ]; then
+        ;;
+    dnf|yum|zypper|apt|apt-get)
         ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
-    elif [ "$PACKAGER" = "zypper" ]; then
-        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
-    else
+        ;;
+    apk)
+        ${SUDO_CMD} "${PACKAGER}" add ${DEPENDENCIES}
+        ;;
+    *)
         ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
-    fi
+        ;;
+    esac
 }
 
 ##################################################################################
@@ -252,6 +256,18 @@ setupZshConfig() {
     if ! command_exists stow; then
         echo "${BOLD}${RED}==>${RC} ${BOLD}Stow${RC} is not installed. Please install it first."
         exit 1
+    fi
+
+    # Check if ~/.zshrc exists
+    if [ -f "$HOME/.zshrc" ]; then
+        mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
+        echo "${GREEN}zsh configuration file backup in ~/.zshrc.bak${RC}"
+    fi
+
+    # Check if ~/.nanorc exists
+    if [ -f "$HOME/.nanorc" ]; then
+        mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
+        echo "${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}"
     fi
 
     # Create a dry run first to check for conflicts
