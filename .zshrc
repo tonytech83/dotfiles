@@ -80,7 +80,7 @@ setopt hist_find_no_dups
 ##################################################################################
 ## Aliases
 ##################################################################################
-[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
+[[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 
 #######################################################
 ## Load Oh-My-Posh if installed

@@ -1,34 +1,36 @@
-# 🏠 dotfiles
+[![Install](https://github.com/tonytech83/dotfiles/actions/workflows/install.yml/badge.svg?branch=main)](https://github.com/tonytech83/dotfiles/actions/workflows/install.yml)
+
+# dotfiles
 
 A comprehensive collection of dotfiles and configurations for my Linux development environment, featuring a beautiful ZSH setup with Oh-My-Posh, Neovim configuration, and various terminal applications.
 
-## ✨ Features
+## Features
 
-### 🐚 Shell Configuration
+### Shell Configuration
 - **ZSH** with [Zinit](https://github.com/zdharma-continuum/zinit) plugin manager
 - **Oh-My-Posh** with custom minimal theme
 - **Smart plugins**: syntax highlighting, autosuggestions, completions, and fzf-tab
 - **Enhanced history** management with deduplication
 - **Custom keybindings** for efficient navigation
 
-### 🛠️ Development Tools
+### Development Tools
 - **Neovim** configuration with AstroNvim framework
 - **Terminal emulators**: Alacritty and Kitty configurations
 - **System information**: Fastfetch configuration
-- **File navigation**: Enhanced with `lsd`, `fzf`, and `zoxide`
+- **File navigation**: Enhanced with `eza`, `fzf`, and `zoxide`
 - **Application launcher**: Rofi with multiple themes
 
-### 🎨 Theming
+### Theming
 - **Nord/Nordic** color schemes across applications
 - **Consistent theming** for terminal, editor, and launcher
 - **Multiple Rofi themes**: Dracula, Everblush, Forest, Gruv, Nord, OneDark
 
-### ⚙️ Utilities
+### Utilities
 - **Nano** configuration with syntax highlighting and line numbers
 - **Kubectl, Helm, Terraform, Ansible** aliases for DevOps workflows
 - **Stow** for symlink management
 
-## 📦 What's Included
+## What's Included
 
 ```
 dotfiles/
@@ -38,15 +40,16 @@ dotfiles/
 │   ├── kitty/              # Terminal emulator config
 │   ├── nvim/               # Neovim configuration
 │   ├── oh-my-posh/         # Shell prompt theme
-│   └── rofi/               # Application launcher
-├── .zsh/
-│   └── aliases.zsh         # Custom shell aliases
+│   ├── eza/                # modern alternative for the ls
+│   ├── rofi/               # Application launcher
+│   └── zsh/
+│       └── aliases.zsh     # Custom shell aliases
 ├── .zshrc                  # Main ZSH configuration
 ├── .nanorc                 # Nano editor configuration
 └── install-zsh.sh          # Automated installation script
 ```
 
-## 🚀 Quick Installation
+## Quick Installation
 
 The installation script automatically detects your Linux distribution and installs all necessary dependencies.
 
@@ -67,7 +70,7 @@ chmod +x install-zsh.sh
 exec zsh
 ```
 
-## 🔧 Manual Installation
+## Manual Installation
 
 ### Prerequisites
 The script automatically handles these, but for manual installation you'll need:
@@ -88,13 +91,12 @@ The script automatically handles these, but for manual installation you'll need:
 The script automatically installs:
 - **ZSH** - Modern shell
 - **Stow** - Symlink farm manager
-- **lsd** - Modern replacement for `ls`
+- **eza** - Modern replacement for `ls`
 - **fzf** - Fuzzy finder
 - **zoxide** - Smart directory jumper
 - **Oh-My-Posh** - Cross-platform prompt theme engine
-- **tree, wget, unzip, fontconfig** - Additional utilities
 
-## 🎯 Key Features Explained
+## Key Features Explained
 
 ### Shell Enhancements
 - **Smart completion**: Case-insensitive with colorized output
@@ -105,8 +107,8 @@ The script automatically installs:
 ### Aliases
 ```bash
 # File listing
-ls    # lsd with directories first
-la    # detailed listing with all files
+ls    # eza with directories first
+la    # eza detailed listing with all files
 c     # clear screen
 
 # DevOps tools
@@ -123,7 +125,7 @@ ap    # ansible-playbook
 - **Execution time** display for long-running commands
 - **Error indication** with color-coded prompts
 
-## 🛠️ Customization
+## Customization
 
 ### Adding Personal Configurations
 1. Fork this repository
@@ -136,7 +138,7 @@ ap    # ansible-playbook
 - Update `.stow-local-ignore` to exclude files from symlinking
 - Modify `install-zsh.sh` to include additional tools
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 1. **Stow conflicts**: The script performs a dry-run first and reports conflicts
@@ -149,15 +151,15 @@ ap    # ansible-playbook
 - Ensure you're running on a supported Linux distribution
 - Verify internet connectivity for downloading tools
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## ⭐ Acknowledgments
+## Acknowledgments
 
 - [Zinit](https://github.com/zdharma-continuum/zinit) for the excellent ZSH plugin manager
 - [Oh-My-Posh](https://ohmyposh.dev/) for the beautiful prompt engine
