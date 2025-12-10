@@ -101,4 +101,8 @@ unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
 
 ### Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if command -v oh-my-posh >/dev/null; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+    echo "Warning: Homebrew is not installed ot not found in /home/linuxbrew/.linuxbrew/bin/brew" >&2
+fi
