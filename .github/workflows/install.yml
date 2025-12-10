@@ -12,7 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: setup dotfiles
+      - name: Setup dotfiles
         run: |
           chmod +x install-zsh.sh
-          ./install-zsh.sh
+          DOTFILES_DIR="$GITHUB_WORKSPACE" ./install-zsh.sh
+
+      - name: Execute zsh
+        run: |
+          exec zsh
+
+      - name: Smoke test zsh
+        shell: zsh {0}
+        run: |
+          echo "Zsh version: $ZSH_VERSION"

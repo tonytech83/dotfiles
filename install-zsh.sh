@@ -24,6 +24,7 @@ PACKAGEMANAGER=""
 SUDO_CMD=""
 REQUIREMENTS=""
 DEPENDENCIES=""
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 print_action() {
     content="$1"
@@ -268,7 +269,10 @@ setupZshConfig() {
     print_action "${ITALIC}${BOLD}${YELLOW}Setup ZSH configuration...${RC}"
 
     # Clone dotfiles repo
-    cd ~/dotfiles
+    cd "$DOTFILES_DIR" || {
+        echo "Dotfiles directory '$DOTFILES_DIR' not found"
+        exit 1
+    }
 
     # Check if stow is available
     if ! command_exists stow; then
