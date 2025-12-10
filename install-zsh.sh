@@ -156,7 +156,7 @@ installEza() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing eza${RC}"
 
     if ! command_exists eza; then
-        printf "%b\n" "${BOLD}${YELLOW} ==>$${RC} Installing ${BOLD}eza${RC}."
+        printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing ${BOLD}eza${RC}."
         cd /tmp
         wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
         ${SUDO_CMD} chmod +x eza
@@ -310,7 +310,7 @@ setupZshConfig() {
     # If dry run successful, perform actual stow
     echo "${BOLD}${YELLOW} ==>${RC} Creating symlinks..."
 
-    if ! stow .; then
+    if ! stow -t "$HOME" .; then
         echo "${BOLD}${RED} ==>${RC} Failed to create symlinks."
         exit 1
     fi
