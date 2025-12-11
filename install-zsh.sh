@@ -39,11 +39,11 @@ print_action() {
     fi
 
     echo ""
-    printf " ╔"
+    printf "╔"
     printf '═%.0s' $(seq 1 "$width")
     printf "╗\n"
-    printf " ║ %s%*s ║\n" "$content" "$padding" ""
-    printf " ╚"
+    printf "║ %s%*s ║\n" "$content" "$padding" ""
+    printf "╚"
     printf '═%.0s' $(seq 1 "$width")
     printf "╝\n"
     echo ""
@@ -67,23 +67,23 @@ checkEnv() {
     REQUIREMENTS="curl sudo"
     for req in $REQUIREMENTS; do
         if ! command_exists "$req"; then
-            echo "${BOLD}${RED} ==>${RC} Missing required command: $req"
+            echo "${BOLD}${RED}==>${RC} Missing required command: $req"
             exit 1
         fi
     done
 
     # Determine the package manager to use
-    PACKAGEMANAGER="apt dnf yum pacman zypper apk"
+    PACKAGEMANAGER="apt-get dnf yum pacman zypper apk"
     for pgm in $PACKAGEMANAGER; do
         if command_exists "$pgm"; then
             PACKAGER="$pgm"
-            echo " ${BOLD}==>${RC} Using ${BOLD}${GREEN}$pgm${RC} for package manager."
+            echo "${BOLD}==>${RC} Using ${BOLD}${GREEN}$pgm${RC} for package manager."
             break
         fi
     done
 
     if [ -z "$PACKAGER" ]; then
-        echo "${BOLD}${RED} ==>${RC} No supported package manager found."
+        echo "${BOLD}${RED}==>${RC} No supported package manager found."
         exit 1
     fi
 
@@ -91,17 +91,65 @@ checkEnv() {
     if [ "$(id -u)" -eq 0 ]; then
         # Running as root
         SUDO_CMD=""
-        echo "${BOLD}${YELLOW} ==>${RC} Running as root, sudo is not needed."
+        echo "${BOLD}${YELLOW}==>${RC} Running as root, sudo is not needed."
     elif command_exists sudo; then
         SUDO_CMD="sudo"
-        echo "${BOLD} ==>${RC} Using ${BOLD}${GREEN}sudo${RC} for privilege escalation."
+        echo "${BOLD}==>${RC} Using ${BOLD}${GREEN}sudo${RC} for privilege escalation."
     elif command_exists doas && [ -f "/etc/doas.conf" ]; then
         SUDO_CMD="doas"
-        echo "${BOLD} ==>${RC} Using ${BOLD}${GREEN}doas${RC} for privilege escalation."
+        echo "${BOLD}==>${RC} Using ${BOLD}${GREEN}doas${RC} for privilege escalation."
     else
-        echo "${BOLD}${RED} ==>${RC} No suitable privilege escalation tool found (sudo/doas)."
+        echo "${BOLD}${RED}==>${RC} No suitable privilege escalation tool found (sudo/doas)."
         exit 1
     fi
+}
+
+##################################################################################
+#####   Function to update system packages
+##################################################################################
+updateSystem() {
+
+    print_action "${ITALIC}${BOLD}${YELLOW}Updating system packages...${RC}"
+
+    case "$PACKAGER" in
+        pacman)
+            "$AUR_HELPER" -S --needed --noconfirm rate-mirrors-bin
+
+            printf "%b\n" "${YELLOW}Generating a new list of mirrors using rate-mirrors. This process may take a few seconds...${RC}"
+
+            if [ -s "/etc/pacman.d/mirrorlist" ]; then
+                ${SUDO_CMD} cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+            fi
+
+            # If for some reason DTYPE is still unknown use always arch so the rate-mirrors does not fail
+            dtype_local="$DTYPE"
+            if [ "$dtype_local" = "unknown" ]; then
+                dtype_local="arch"
+            fi
+
+            if ! ${SUDO_CMD} rate-mirrors --top-mirrors-number-to-retest=5 --disable-comments --save /etc/pacman.d/mirrorlist --allow-root "$dtype_local" > /dev/null || [ ! -s "/etc/pacman.d/mirrorlist" ]; then
+                printf "%b\n" "${RED}Rate-mirrors failed, restoring backup.${RC}"
+                ${SUDO_CMD} cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+            fi
+            ;;
+        apt-get)
+            ${SUDO_CMD} "$PACKAGER" update
+            ;;
+        dnf)
+            ${SUDO_CMD} "$PACKAGER" update -y
+            ;;
+        zypper)
+            ${SUDO_CMD} "$PACKAGER" ref
+            ;;
+        apk)
+            ${SUDO_CMD} "$PACKAGER" update
+            ;;
+        *)
+            printf "%b\n" "${RED}Unsupported package manager: ${PACKAGER}${RC}"
+            exit 1
+            ;;
+    esac
+
 }
 
 ##################################################################################
@@ -117,12 +165,12 @@ installDepend() {
     pacman)
         # Install AUR helper if not present
         if ! command_exists yay && ! command_exists paru; then
-            echo "${BOLD}${YELLOW} ==>${RC} Installing yay as AUR helper..."
-            ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
-            cd /opt && ${SUDO_CMD} git clone https://aur.archlinux.org/yay-git.git && ${SUDO_CMD} chown -R "${USER}:${USER}" ./yay-git
+            echo "${BOLD}${YELLOW}==>${RC} Installing yay as AUR helper..."
+            SUDO_CMD "${PACKAGER}" --noconfirm -S base-devel
+            cd /opt && SUDO_CMD git clone https://aur.archlinux.org/yay-git.git && SUDO_CMD chown -R "${USER}:${USER}" ./yay-git
             cd yay-git && makepkg --noconfirm -si
         else
-            echo "${BOLD}${YELLOW} ==>${RC} AUR helper already installed!"
+            echo "${BOLD}${YELLOW}==>${RC} AUR helper already installed!"
         fi
 
         # Determine which AUR helper to use
@@ -131,19 +179,19 @@ installDepend() {
         elif command_exists paru; then
             AUR_HELPER="paru"
         else
-            echo "${BOLD}${RED} ==>${RC} No AUR helper found. Please install ${BOLD}yay${RC} or ${BOLD}paru${RC}."
+            echo "${BOLD}${RED}==>${RC} No AUR helper found. Please install ${BOLD}yay${RC} or ${BOLD}paru${RC}."
             exit 1
         fi
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
         ;;
     dnf | yum | zypper | apt | apt-get)
-        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
+        SUDO_CMD "${PACKAGER}" install -y ${DEPENDENCIES}
         ;;
     apk)
-        ${SUDO_CMD} "${PACKAGER}" add ${DEPENDENCIES}
+        SUDO_CMD "${PACKAGER}" add ${DEPENDENCIES}
         ;;
     *)
-        ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
+        SUDO_CMD "${PACKAGER}" install -yq ${DEPENDENCIES}
         ;;
     esac
 }
@@ -156,15 +204,15 @@ installEza() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing eza${RC}"
 
     if ! command_exists eza; then
-        printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing ${BOLD}eza${RC}."
+        printf "%b\n" "${BOLD}${YELLOW}==>${RC} Installing ${BOLD}eza${RC}."
         cd /tmp
         wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
-        ${SUDO_CMD} chmod +x eza
-        ${SUDO_CMD} chown root:root eza
-        ${SUDO_CMD} mv eza /usr/local/bin/eza
-        echo "${BOLD}${GREEN} ==> ${RC} Successfully installed ${BOLD}eza${RC}."
+        SUDO_CMD chmod +x eza
+        SUDO_CMD chown root:root eza
+        SUDO_CMD mv eza /usr/local/bin/eza
+        echo "${BOLD}${GREEN}==> ${RC} Successfully installed ${BOLD}eza${RC}."
     else
-        printf "%b\n" "${BOLD}${GREEN} ==>${RC} ${BOLD}eza${RC} is already installed."
+        printf "%b\n" "${BOLD}${GREEN}==>${RC} ${BOLD}eza${RC} is already installed."
     fi
 }
 
@@ -176,7 +224,7 @@ installZsh() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing zsh${RC}"
 
     if ! command_exists zsh; then
-        printf "%b\n" "${BOLD}${YELLOW} ==>${RC} Installing ${BOLD}zsh${RC}..."
+        printf "%b\n" "${BOLD}${YELLOW}==>${RC} Installing ${BOLD}zsh${RC}..."
         case "$PACKAGER" in
         pacman)
             $SUDO_CMD "$PACKAGER" -S --needed --noconfirm zsh
@@ -188,9 +236,9 @@ installZsh() {
             $SUDO_CMD "$PACKAGER" install -y zsh
             ;;
         esac
-        echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}zsh${RC}."
+        echo "${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}zsh${RC}."
     else
-        printf "%b\n" "${BOLD}${GREEN} ==>${RC} ${BOLD}zsh${RC} is already installed."
+        printf "%b\n" "${BOLD}${GREEN}==>${RC} ${BOLD}zsh${RC} is already installed."
     fi
 }
 
@@ -202,15 +250,15 @@ installFzf() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing fzf${RC}"
 
     if command_exists fzf || [ -d "$HOME/.fzf" ]; then
-        echo "${BOLD}${GREEN} ==>${RC} ${BOLD}fzf${RC} already installed!"
+        echo "${BOLD}${GREEN}==>${RC} ${BOLD}fzf${RC} already installed!"
     else
-        echo "${YELLOW} ==>${RC} Installing ${BOLD}fzf${RC}..."
-        ${SUDO_CMD} "${PACKAGER}" install -y fzf 2>/dev/null || {
-            echo "${BOLD}${YELLOW} ==>${RC} ${BOLD}fzf${RC} not available in package manager. Cloning from GitHub..."
+        echo "${YELLOW}==>${RC} Installing ${BOLD}fzf${RC}..."
+        SUDO_CMD "${PACKAGER}" install -y fzf 2>/dev/null || {
+            echo "${BOLD}${YELLOW}==>${RC} ${BOLD}fzf${RC} not available in package manager. Cloning from GitHub..."
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
         }
-        echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}fzf${RC}."
+        echo "${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}fzf${RC}."
     fi
 }
 
@@ -222,15 +270,15 @@ installZoxide() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing Zoxide${RC}"
 
     if command_exists zoxide; then
-        echo "${BOLD}${GREEN} ==>${RC} ${BOLD}Zoxide${RC} already installed."
+        echo "${BOLD}${GREEN}==>${RC} ${BOLD}Zoxide${RC} already installed."
         return
     fi
 
     # Install Zoxide
     if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh; then
-        echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}Zoxide${RC}!"
+        echo "${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}Zoxide${RC}!"
     else
-        echo "${BOLD}${RED} ==>${RC} Something went wrong during ${BOLD}Zoxide${RC} install!"
+        echo "${BOLD}${RED}==>${RC} Something went wrong during ${BOLD}Zoxide${RC} install!"
         exit 1
     fi
 }
@@ -243,23 +291,23 @@ installOhMyPosh() {
     print_action "${ITALIC}${BOLD}${YELLOW}Installing Oh My Posh${RC}"
 
     if command_exists oh-my-posh; then
-        echo "${BOLD}${GREEN} ==>${RC} ${BOLD}Oh My Posh${RC} already installed!"
+        echo "${BOLD}${GREEN}==>${RC} ${BOLD}Oh My Posh${RC} already installed!"
         return
     fi
 
     # Check if the ./local/bin exists
     LOCALBINFOLDER="$HOME/.local/bin"
     if [ ! -d "$LOCALBINFOLDER" ]; then
-        echo "${BOLD}${YELLOW} ==>${RC} Creating directory: $LOCALBINFOLDER"
+        echo "${BOLD}${YELLOW}==>${RC} Creating directory: $LOCALBINFOLDER"
         mkdir -p "$LOCALBINFOLDER"
-        echo "${BOLD}${GREEN} ==>${RC} Directory created: $LOCALBINFOLDER"
+        echo "${BOLD}${GREEN}==>${RC} Directory created: $LOCALBINFOLDER"
     fi
 
     # Install Oh My Posh
     if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
         echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}Oh My Posh${RC}!"
     else
-        echo "${BOLD}${RED} ==>${RC} Something went wrong during ${BOLD}Oh My Posh${RC} install!"
+        echo "${BOLD}${RED}==>${RC} Something went wrong during ${BOLD}Oh My Posh${RC} install!"
         exit 1
     fi
 }
@@ -299,36 +347,36 @@ setupZshConfig() {
     fi
 
     # Create a dry run first to check for conflicts
-    echo "${BOLD}${YELLOW} ==>${RC} Checking for potential conflicts..."
+    echo "${BOLD}${YELLOW}==>${RC} Checking for potential conflicts..."
 
     if ! stow -n .; then
-        echo "${BOLD}${RED} ==>${RC} ${BOLD}Stow${RC} detected conflicts. Please check the output above."
-        echo "${BOLD}${YELLOW} ==>${RC} You may need to manually resolve conflicts."
+        echo "${BOLD}${RED}==>${RC} ${BOLD}Stow${RC} detected conflicts. Please check the output above."
+        echo "${BOLD}${YELLOW}==>${RC} You may need to manually resolve conflicts."
         exit 1
     fi
 
     # If dry run successful, perform actual stow
-    echo "${BOLD}${YELLOW} ==>${RC} Creating symlinks..."
+    echo "${BOLD}${YELLOW}==>${RC} Creating symlinks..."
 
     if ! stow -t "$HOME" .; then
-        echo "${BOLD}${RED} ==>${RC} Failed to create symlinks."
+        echo "${BOLD}${RED}==>${RC} Failed to create symlinks."
         exit 1
     fi
 
     # Verify critical files were linked
     if [ ! -L "$HOME/.zshrc" ]; then
-        echo "${BOLD}${RED} ==>${RC} Failed to create ${BOLD}.zshrc${RC} symlink."
+        echo "${BOLD}${RED}==>${RC} Failed to create ${BOLD}.zshrc${RC} symlink."
         exit 1
     fi
 
     # Change default shell to zsh for current user
     sudo chsh -s "$(which zsh)" "$USER"
 
-    echo "${BOLD}${GREEN} ==>${RC} ZSH configuration setup completed successfully!"
+    echo "${BOLD}${GREEN}==>${RC} ZSH configuration setup completed successfully!"
 
     # Optionally source the new configuration
     if [ -f "$HOME/.zshrc" ]; then
-        echo "${BOLD}${YELLOW} ==>${RC} Please execute ${BOLD}${GREEN}exec zsh${RC} and the installation will continue ..."
+        echo "${BOLD}${YELLOW}==>${RC} Please execute ${BOLD}${GREEN}exec zsh${RC} and the installation will continue ..."
     fi
 }
 
@@ -343,28 +391,28 @@ codename=$(lsb_release -c | cut -f2-)
 clear
 cat <<'EOF'
 
- ╔═════════════════════════════════════════════════════════════════════════════╗
- ║                                                                             ║
- ║                                         /$$                                 ║
- ║                                        | $$                                 ║
- ║                     /$$$$$$$$  /$$$$$$$| $$$$$$$                            ║
- ║                    |____ /$$/ /$$_____/| $$__  $$                           ║
- ║                       /$$$$/ |  $$$$$$ | $$  \ $$                           ║
- ║                      /$$__/   \____  $$| $$  | $$                           ║
- ║                     /$$$$$$$$ /$$$$$$$/| $$  | $$                           ║
- ║                    |________/|_______/ |__/  |__/                           ║
- ║                                                                             ║
- ║                                                                             ║
- ║    From some basic information on your system, you appear to be running:    ║
- ║                                                                             ║  
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                                                                             ║
+║                                         /$$                                 ║
+║                                        | $$                                 ║
+║                     /$$$$$$$$  /$$$$$$$| $$$$$$$                            ║
+║                    |____ /$$/ /$$_____/| $$__  $$                           ║
+║                       /$$$$/ |  $$$$$$ | $$  \ $$                           ║
+║                      /$$__/   \____  $$| $$  | $$                           ║
+║                     /$$$$$$$$ /$$$$$$$/| $$  | $$                           ║
+║                    |________/|_______/ |__/  |__/                           ║
+║                                                                             ║
+║                                                                             ║
+║    From some basic information on your system, you appear to be running:    ║
+║                                                                             ║  
 EOF
-printf " ║       --  ${BOLD}OS Name${RC}        : %-48s ║\n" "$os_name"
-printf " ║       --  ${BOLD}Description${RC}    : %-48s ║\n" "$desc"
-printf " ║       --  ${BOLD}OS Version${RC}     : %-48s ║\n" "$version"
-printf " ║       --  ${BOLD}Code Name      : %-48s ║\n" "$codename"
+printf "║       --  ${BOLD}OS Name${RC}        : %-48s ║\n" "$os_name"
+printf "║       --  ${BOLD}Description${RC}    : %-48s ║\n" "$desc"
+printf "║       --  ${BOLD}OS Version${RC}     : %-48s ║\n" "$version"
+printf "║       --  ${BOLD}Code Name      : %-48s ║\n" "$codename"
 cat <<'EOF'
- ║                                                                             ║
- ╚═════════════════════════════════════════════════════════════════════════════╝
+║                                                                             ║
+╚═════════════════════════════════════════════════════════════════════════════╝
 
 EOF
 
@@ -372,6 +420,7 @@ EOF
 #####   Execute the functions in order
 ##################################################################################
 checkEnv
+updateSystem
 installZsh
 installDepend
 installOhMyPosh
