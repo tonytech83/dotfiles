@@ -287,7 +287,7 @@ installOhMyPosh() {
     fi
 
     # Install Oh My Posh
-    if curl -sS https://ohmyposh.dev/install.sh | sh -s -- -d ~/.local/bin; then
+    if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
         echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}Oh My Posh${RC}!"
     else
         echo "${BOLD}${RED}==>${RC} Something went wrong during ${BOLD}Oh My Posh${RC} install!"
