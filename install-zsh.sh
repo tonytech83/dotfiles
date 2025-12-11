@@ -113,24 +113,7 @@ updateSystem() {
 
     case "$PACKAGER" in
         pacman)
-            "$AUR_HELPER" -S --needed --noconfirm rate-mirrors-bin
-
-            printf "%b\n" "${YELLOW}Generating a new list of mirrors using rate-mirrors. This process may take a few seconds...${RC}"
-
-            if [ -s "/etc/pacman.d/mirrorlist" ]; then
-                ${SUDO_CMD} cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-            fi
-
-            # If for some reason DTYPE is still unknown use always arch so the rate-mirrors does not fail
-            dtype_local="$DTYPE"
-            if [ "$dtype_local" = "unknown" ]; then
-                dtype_local="arch"
-            fi
-
-            if ! ${SUDO_CMD} rate-mirrors --top-mirrors-number-to-retest=5 --disable-comments --save /etc/pacman.d/mirrorlist --allow-root "$dtype_local" > /dev/null || [ ! -s "/etc/pacman.d/mirrorlist" ]; then
-                printf "%b\n" "${RED}Rate-mirrors failed, restoring backup.${RC}"
-                ${SUDO_CMD} cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
-            fi
+            ${SUDO_CMD} "$PACKAGER" -Sy
             ;;
         apt-get)
             ${SUDO_CMD} "$PACKAGER" update
@@ -167,7 +150,7 @@ installDepend() {
         if ! command_exists yay && ! command_exists paru; then
             echo "${BOLD}${YELLOW}==>${RC} Installing yay as AUR helper..."
             ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
-            cd /opt && SUDO_CMD git clone https://aur.archlinux.org/yay-git.git && SUDO_CMD chown -R "${USER}:${USER}" ./yay-git
+            cd /opt && ${SUDO_CMD} git clone https://aur.archlinux.org/yay-git.git && ${SUDO_CMD} chown -R "${USER}:${USER}" ./yay-git
             cd yay-git && makepkg --noconfirm -si
         else
             echo "${BOLD}${YELLOW}==>${RC} AUR helper already installed!"
@@ -256,7 +239,7 @@ installFzf() {
         SUDO_CMD "${PACKAGER}" install -y fzf 2>/dev/null || {
             echo "${BOLD}${YELLOW}==>${RC} ${BOLD}fzf${RC} not available in package manager. Cloning from GitHub..."
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-            ~/.fzf/install
+            ~/.fzf/install --all # non-interactive, auto “yes” to everything
         }
         echo "${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}fzf${RC}."
     fi
@@ -304,7 +287,7 @@ installOhMyPosh() {
     fi
 
     # Install Oh My Posh
-    if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
+    if curl -sS https://ohmyposh.dev/install.sh | sh -s -- -d ~/.local/bin; then
         echo "${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}Oh My Posh${RC}!"
     else
         echo "${BOLD}${RED}==>${RC} Something went wrong during ${BOLD}Oh My Posh${RC} install!"
@@ -406,7 +389,7 @@ EOF
 printf "║       --  ${BOLD}OS Name${RC}        : %-48s ║\n" "$os_name"
 printf "║       --  ${BOLD}Description${RC}    : %-48s ║\n" "$desc"
 printf "║       --  ${BOLD}OS Version${RC}     : %-48s ║\n" "$version"
-printf "║       --  ${BOLD}Code Name      : %-48s ║\n" "$codename"
+printf "║       --  ${BOLD}Code Name${RC}      : %-48s ║\n" "$codename"
 cat <<'EOF'
 ║                                                                             ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
