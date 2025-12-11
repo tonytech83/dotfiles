@@ -337,13 +337,6 @@ setupZshConfig() {
         echo "${GREEN}zsh configuration file backup in ~/.zshrc.bak${RC}"
     fi
 
-    # Check if ~/.config/eza/theme.yml exists
-    EZA_DIR="$HOME/.config/eza"
-    if [ -d "$EZA_DIR" ] && [ ! -L "$EZA_DIR" ]; then
-        rm -rf "$EZA_DIR"
-        echo "${GREEN}eza configuration file was replaced${RC}"
-    fi
-
     # Check if ~/.nanorc exists
     if [ -f "$HOME/.nanorc" ]; then
         mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
