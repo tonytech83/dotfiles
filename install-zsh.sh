@@ -166,7 +166,7 @@ installDepend() {
         # Install AUR helper if not present
         if ! command_exists yay && ! command_exists paru; then
             echo "${BOLD}${YELLOW}==>${RC} Installing yay as AUR helper..."
-            SUDO_CMD "${PACKAGER}" --noconfirm -S base-devel
+            ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
             cd /opt && SUDO_CMD git clone https://aur.archlinux.org/yay-git.git && SUDO_CMD chown -R "${USER}:${USER}" ./yay-git
             cd yay-git && makepkg --noconfirm -si
         else
@@ -185,13 +185,13 @@ installDepend() {
         "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
         ;;
     dnf | yum | zypper | apt | apt-get)
-        SUDO_CMD "${PACKAGER}" install -y ${DEPENDENCIES}
+        ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
         ;;
     apk)
-        SUDO_CMD "${PACKAGER}" add ${DEPENDENCIES}
+        ${SUDO_CMD} "${PACKAGER}" add ${DEPENDENCIES}
         ;;
     *)
-        SUDO_CMD "${PACKAGER}" install -yq ${DEPENDENCIES}
+        ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
         ;;
     esac
 }
@@ -207,9 +207,9 @@ installEza() {
         printf "%b\n" "${BOLD}${YELLOW}==>${RC} Installing ${BOLD}eza${RC}."
         cd /tmp
         wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
-        SUDO_CMD chmod +x eza
-        SUDO_CMD chown root:root eza
-        SUDO_CMD mv eza /usr/local/bin/eza
+        ${SUDO_CMD} chmod +x eza
+        ${SUDO_CMD} chown root:root eza
+        ${SUDO_CMD} mv eza /usr/local/bin/eza
         echo "${BOLD}${GREEN}==> ${RC} Successfully installed ${BOLD}eza${RC}."
     else
         printf "%b\n" "${BOLD}${GREEN}==>${RC} ${BOLD}eza${RC} is already installed."
@@ -227,13 +227,13 @@ installZsh() {
         printf "%b\n" "${BOLD}${YELLOW}==>${RC} Installing ${BOLD}zsh${RC}..."
         case "$PACKAGER" in
         pacman)
-            $SUDO_CMD "$PACKAGER" -S --needed --noconfirm zsh
+            ${SUDO_CMD} "$PACKAGER" -S --needed --noconfirm zsh
             ;;
         apk)
-            $SUDO_CMD "$PACKAGER" add zsh
+            ${SUDO_CMD} "$PACKAGER" add zsh
             ;;
         *)
-            $SUDO_CMD "$PACKAGER" install -y zsh
+            ${SUDO_CMD} "$PACKAGER" install -y zsh
             ;;
         esac
         echo "${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}zsh${RC}."
