@@ -312,6 +312,9 @@ installOhMyPosh() {
     fi
 }
 
+##################################################################################
+##### Function to setup ZSH configuration
+##################################################################################
 setupZshConfig() {
 
     print_action "${ITALIC}${BOLD}${YELLOW}Setup ZSH configuration...${RC}"
@@ -335,8 +338,10 @@ setupZshConfig() {
     fi
 
     # Check if ~/.config/eza/theme.yml exists
-    if [ -f "$HOME/.config/eza/theme.yml" ]; then
-        mv "$HOME/.config/eza/theme.yml" "$HOME/.config/eza/theme.yml.bak"
+    EZA_DIR="$HOME/.config/eza"
+    EZA_THEME="$EZA_DIR/theme.yml"
+    if [ -d "$EZA_DIR" ] && [ ! -L "$EZA_DIR" ] && [ -f "$EZA_THEME" ]; then
+        mv "$EZA_THEME" "$EZA_THEME.bak"
         echo "${GREEN}eza configuration file backup in ~/.config/eza/theme.yml.bak${RC}"
     fi
 
