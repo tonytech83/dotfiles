@@ -88,7 +88,7 @@ setopt hist_find_no_dups
 OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
 
 if command -v oh-my-posh >/dev/null; then
-    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/minimal.toml)"
+    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/zen.toml)"
 else
     echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
 fi
