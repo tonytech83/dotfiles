@@ -17,7 +17,7 @@ jobs:
       - name: Get a list of script files
         id: get_sh_files
         run: |
-          sh_files=$(find ./scripts -type f -name "*.sh")
+          sh_files=$(find . -type f -name "*.sh")
           echo "Shell files: $sh_files"
           echo "sh_files=$(echo $sh_files | tr '\n' ' ')" >> $GITHUB_ENV
 
