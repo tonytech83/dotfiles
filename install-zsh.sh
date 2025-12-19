@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC2034,SC2086
+
 # Global fixed width (inside the box)
 BOX_WIDTH=76
 
@@ -188,7 +190,7 @@ installEza() {
 
     if ! command_exists eza; then
         printf "%b\n" "${BOLD}${YELLOW}==>${RC} Installing ${BOLD}eza${RC}."
-        cd /tmp
+        cd /tmp || exit
         wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
         ${SUDO_CMD} chmod +x eza
         ${SUDO_CMD} chown root:root eza
