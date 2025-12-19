@@ -1,9 +1,6 @@
 name: Install
 
-on:
-  pull_request:
-    branches: ["main"]
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
   install:
