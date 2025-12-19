@@ -1,0 +1,36 @@
+name: Check for bashisms
+
+on: [push, pull_request]
+
+
+jobs:
+  check-bashisms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # Get the list of changed script files in the "scripts" folder
+      - name: Get a list of script files
+        id: get_sh_files
+        run: |
+          sh_files=$(find ./scripts -type f -name "*.sh")
+          echo "Shell files: $sh_files"
+          echo "sh_files=$(echo $sh_files | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Install devscripts
+        if: ${{ env.sh_files != '' }}
+        run: sudo apt-get update && sudo apt-get install devscripts
+
+      - name: Check for bashisms
+        if: ${{ env.sh_files != '' }}
+        run: |
+          for file in ${{ env.sh_files }}; do
+              if [[ -f "$file" ]]; then
+                  echo "Running checkbashisms for $file"
+                  checkbashisms "$file" || true  # Ignore non-zero exit status
+              fi
+          done
