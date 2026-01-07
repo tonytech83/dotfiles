@@ -1,0 +1,196 @@
+console_title_template = "{{ .Shell }} in {{ .Folder }}"
+version = 3
+final_space = true
+
+[palette]
+  black = "#2E3440"
+  green = "#A3BE8C"
+  white = "#D8DEE9"
+  gray = "#84868b"
+  blue = "#81A1C1"
+  red = "#BF616A"
+  yellow = "#EBCB8B"
+  purple = "#B48EAD"
+  orange = "#f7931a"
+  darkblue = "#7292b2"
+  cyan-blue = "#06AAE3"
+  yellowgreen = "#9ACD32"
+
+[secondary_prompt]
+  template = ">> "
+  foreground = "p:green"
+  background = "transparent"
+
+[transient_prompt]
+  template ="$ "
+  background = "transparent"
+  foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:green{{end}}"
+  ]
+
+[[blocks]]
+  type = "prompt"
+  alignment = "left"
+  newline = true
+
+############################################################################
+##### Username
+############################################################################
+
+[[blocks.segments]]
+  type = "session"
+  style = "plain"
+  template = "<b>{{ .UserName }}</b>"
+  foreground = "p:orange"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    display_mode = "files"
+    fetch_virtual_env = true
+
+############################################################################
+##### at
+############################################################################
+
+[[blocks.segments]]
+  type = "text"
+  style = "plain"
+  template = "<b> at </b>"
+  foreground = "p:white"
+  background = "transparent"
+
+############################################################################
+##### Hostname
+############################################################################
+
+[[blocks.segments]]
+  type = "session"
+  style = "plain"
+  template = "<b>{{ if .WSL }}wsl{{ else }}{{ .HostName }}{{ end }}</b>"
+  foreground = "p:cyan-blue"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    display_mode = "files"
+    fetch_virtual_env = true
+
+############################################################################
+##### in
+############################################################################
+
+[[blocks.segments]]
+  type = "text"
+  style = "plain"
+  template = "<b> in </b>"
+  foreground = "p:white"
+  background = "transparent"
+
+############################################################################
+##### Path
+############################################################################
+[[blocks.segments]]
+  type = "path"
+  style = "plain"
+  template = "<b>{{ .Path }}</b>"
+  foreground = "p:yellowgreen"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    cache_duration = "none"
+    style = "folder"
+
+############################################################################
+##### Git
+############################################################################
+[[blocks.segments]]
+  type = "git"
+  style = "powerline"
+  template = "<b> <p:white>on</>  <p:red>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{else }}≡{{ end }}</> <p:purple>{{ if gt .Behind 0 }}{{ end }}{{ if gt .Ahead 0 }}{{ end }}</></b>"
+  foreground = "p:red"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    branch_icon = ""
+    cache_duration = "none"
+    commit_icon = "@"
+    fetch_status = true
+
+############################################################################
+##### via
+############################################################################
+#[[blocks.segments]]
+#  type = "text"
+#  style = "plain"
+#  template = "<b> via </b>"
+#  foreground = "p:white"
+#  background = "transparent"
+#  when = "{{ .Env.VIRTUAL_ENV }}"
+
+############################################################################
+##### Python
+############################################################################
+# If venv is active the icon is green else gray
+[[blocks.segments]]
+  type = "python"
+  style = "plain"
+  template = "<b><p:white> via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
+  foreground = "p:gray"
+  background = "transparent"
+  #foreground_templates = [ "{{ if .Venv }}p:green{{ end }}" ]
+
+  [blocks.segments.properties]
+    fetch_virtual_env = true
+    display_mode = "files"
+
+############################################################################
+##### Rust
+############################################################################
+[[blocks.segments]]
+  type = "rust"
+  style = "plain"
+  template = "<b><p:white>via </></b>󱘗 v{{ .Full }}"
+  foreground = "p:gray"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    display_mode = "files"
+
+############################################################################
+##### Execution time of command 
+############################################################################
+[[blocks]]
+type = "rprompt"
+overflow = "hidden"
+
+[[blocks.segments]]
+  type = "executiontime"
+  style = "plain"
+  template = "{{ .FormattedMs }}"
+  foreground = "p:yellow"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    cache_duration = "none"
+    threshold = 1
+
+############################################################################
+##### Main prompt
+############################################################################
+[[blocks]]
+type = "prompt"
+alignment = "left"
+newline = true
+
+[[blocks.segments]]
+  type = "text"
+  style = "plain"
+  template = "<b>$</b>"
+  foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:white{{end}}"
+  ]
+  background = "transparent"
+
+  [blocks.segments.properties]
+    cache_duration = "none"

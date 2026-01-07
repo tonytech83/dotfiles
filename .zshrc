@@ -88,7 +88,7 @@ setopt hist_find_no_dups
 OMP_HOME="${XDG_DATA_HOME:-${HOME}/.local/bin}"
 
 if command -v oh-my-posh >/dev/null; then
-    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/min.toml)"
+    eval "$(oh-my-posh init zsh --config ~/dotfiles/.config/oh-my-posh/code.toml)"
 else
     echo "Warning: Oh-My-Posh not found in $OMP_HOME" >&2
 fi
@@ -101,8 +101,8 @@ unalias zi 2>/dev/null
 eval "$(zoxide init zsh)"
 
 ### Homebrew
-if command -v brew >/dev/null; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-else
-    echo "Homebrew is not installed ot not found in /home/linuxbrew/.linuxbrew/bin/brew" >&2
-fi
+# if command -v brew >/dev/null; then
+#     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# else
+#     echo "Homebrew is not installed ot not found in /home/linuxbrew/.linuxbrew/bin/brew" >&2
+# fi
