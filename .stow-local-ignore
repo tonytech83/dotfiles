@@ -1,5 +1,7 @@
 .git
+.gitignore
 .github
-install-zsh.sh
+setup.sh
 LICENSE
 README.md
+installation.log
