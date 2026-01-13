@@ -11,7 +11,7 @@ jobs:
 
       - name: Setup dotfiles
         run: |
-          chmod +x install-zsh.sh
+          chmod +x setup.sh
           DOTFILES_DIR="$GITHUB_WORKSPACE" ./setup.sh
 
       - name: Execute zsh
