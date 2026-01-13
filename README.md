@@ -46,7 +46,7 @@ dotfiles/
 │       └── aliases.zsh     # Custom shell aliases
 ├── .zshrc                  # Main ZSH configuration
 ├── .nanorc                 # Nano editor configuration
-└── install-zsh.sh          # Automated installation script
+└── setup.sh                # Automated installation script
 ```
 
 ## Quick Installation
@@ -62,7 +62,7 @@ cd ~/dotfiles
 ### 2. Run the installation script
 ```bash
 chmod +x install-zsh.sh
-./install-zsh.sh
+./setup.sh
 ```
 
 ### 3. Restart your shell
@@ -96,35 +96,6 @@ The script automatically installs:
 - **zoxide** - Smart directory jumper
 - **Oh-My-Posh** - Cross-platform prompt theme engine
 
-## Key Features Explained
-
-### Shell Enhancements
-- **Smart completion**: Case-insensitive with colorized output
-- **History search**: Use `Ctrl+P` and `Ctrl+N` for history navigation
-- **Directory preview**: See directory contents when using `cd` with tab completion
-- **Fast navigation**: `z` command for quick directory jumping with zoxide
-
-### Aliases
-```bash
-# File listing
-ls    # eza with directories first
-la    # eza detailed listing with all files
-c     # clear screen
-
-# DevOps tools
-k     # kubectl
-h     # helm
-tf    # terraform
-a     # ansible
-ap    # ansible-playbook
-```
-
-### Oh-My-Posh Theme
-- **Minimal design** with essential information
-- **Git status** indicators with branch and changes
-- **Execution time** display for long-running commands
-- **Error indication** with color-coded prompts
-
 ## Customization
 
 ### Adding Personal Configurations
@@ -147,7 +118,7 @@ ap    # ansible-playbook
 4. **Package manager not detected**: Manually install dependencies
 
 ### Getting Help
-- Check the script output for detailed error messages
+- Check the `installation.log` for detailed error messages
 - Ensure you're running on a supported Linux distribution
 - Verify internet connectivity for downloading tools
 
