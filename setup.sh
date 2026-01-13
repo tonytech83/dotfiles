@@ -98,6 +98,32 @@ command_exists() {
 }
 
 ##################################################################################
+#####   Function to authenticate sudo early
+##################################################################################
+authenticateSudo() {
+    # Only prompt for sudo if we need it and it's available
+    if [ -n "$SUDO_CMD" ] && [ "$SUDO_CMD" = "sudo" ]; then
+        printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Authenticating sudo access${RC}\n"
+        
+        # This will prompt for password if needed and cache credentials
+        if ! ${SUDO_CMD} -v; then
+            printf "${BOLD}${RED}==>${RC} Failed to authenticate sudo access\n"
+            exit 1
+        fi
+        
+        printf "${BOLD}${GREEN}==>${RC} Sudo authentication successful!\n\n"
+        
+        # Keep sudo alive in background (optional - refreshes every 60 seconds)
+        # This prevents timeout during long operations
+        while true; do
+            ${SUDO_CMD} -n true
+            sleep 60
+            kill -0 "$$" || exit
+        done 2>/dev/null &
+    fi
+}
+
+##################################################################################
 #####   Function to check the environment for necessary tools and permissions
 ##################################################################################
 checkEnv() {
@@ -478,6 +504,7 @@ EOF
 head
 startLog
 checkEnv
+authenticateSudo
 updateSystem
 installDepend
 installZsh
