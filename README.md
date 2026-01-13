@@ -61,7 +61,7 @@ cd ~/dotfiles
 
 ### 2. Run the installation script
 ```bash
-chmod +x install-zsh.sh
+chmod +x setup.sh
 ./setup.sh
 ```
 
