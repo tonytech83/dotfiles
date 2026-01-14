@@ -1,0 +1,143 @@
+name: Lint, Test & Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
+      - '.github/**'
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: false
+        default: 'patch'
+        type: choice
+        options:
+          - test
+          - minor
+          - major
+
+jobs:
+  bashisms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # Get the list of script files in the root folder
+      - name: Get a list of script files
+        id: get_sh_files
+        run: |
+          if sh_files=$(find . -type f -name "*.sh" -print); then
+            echo "Shell files found:"
+            echo "$sh_files"
+            echo "has_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_files=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install devscripts
+        if: steps.get_sh_files.outputs.has_files == 'true'
+        run: sudo apt-get update && sudo apt-get install -y devscripts
+
+      - name: Check for bashisms
+        if: steps.get_sh_files.outputs.has_files == 'true'
+        run: |
+          find . -type f -name "*.sh" -print0 | while IFS= read -r -d '' file; do
+            echo "Running checkbashisms for $file"
+            checkbashisms "$file" || true
+          done
+
+  
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Lint Bash scripts
+        run: |
+          echo "Running ShellCheck..."
+          find . -name "*.sh" -exec shellcheck -f gcc {} + | tee shellcheck.log
+          if grep -q "error:" shellcheck.log; then
+            echo "Linting errors found!"
+            exit 1
+          else
+            echo "No linting errors found."
+          fi
+
+      - name: Upload ShellCheck results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shellcheck-results
+          path: shellcheck.log
+
+  install:
+    needs:
+      - lint
+      - bashisms
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup dotfiles
+        run: |
+          chmod +x setup.sh
+          DOTFILES_DIR="$GITHUB_WORKSPACE" ./setup.sh
+
+      - name: Smoke test zsh
+        shell: zsh {0}
+        run: |
+          echo "Zsh version: $ZSH_VERSION"
+
+  releaseGithub:
+    needs:
+      - install
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Bump version and push tag
+        id: bump
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+          
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: ${{ steps.bump.outputs.previous_tag }}
+          toTag: ${{ steps.bump.outputs.new_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.github_release.outputs.changelog }}
+          tag_name: ${{ steps.bump.outputs.new_tag }}
