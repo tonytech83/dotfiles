@@ -126,6 +126,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: patch
+          nitial_version: 0.0.0
           
       - name: Build Changelog
         id: github_release
