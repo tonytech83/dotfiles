@@ -50,13 +50,13 @@ final_space = true
     fetch_virtual_env = true
 
 ############################################################################
-##### at
+##### @
 ############################################################################
 
 [[blocks.segments]]
   type = "text"
   style = "plain"
-  template = "<b> at </b>"
+  template = "<b> @ </b>"
   foreground = "p:white"
   background = "transparent"
 
@@ -117,27 +117,15 @@ final_space = true
     fetch_status = true
 
 ############################################################################
-##### via
-############################################################################
-#[[blocks.segments]]
-#  type = "text"
-#  style = "plain"
-#  template = "<b> via </b>"
-#  foreground = "p:white"
-#  background = "transparent"
-#  when = "{{ .Env.VIRTUAL_ENV }}"
-
-############################################################################
 ##### Python
 ############################################################################
 # If venv is active the icon is green else gray
 [[blocks.segments]]
   type = "python"
   style = "plain"
-  template = "<b><p:white> via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
+  template = "<b><p:white>via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
   foreground = "p:gray"
   background = "transparent"
-  #foreground_templates = [ "{{ if .Venv }}p:green{{ end }}" ]
 
   [blocks.segments.properties]
     fetch_virtual_env = true
