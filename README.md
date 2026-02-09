@@ -1,4 +1,4 @@
-[![Install](https://github.com/tonytech83/dotfiles/actions/workflows/install.yml/badge.svg?branch=main)](https://github.com/tonytech83/dotfiles/actions/workflows/install.yml)
+[![Lint, Test & Release](https://github.com/tonytech83/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/tonytech83/dotfiles/actions/workflows/ci.yml)
 
 # dotfiles
 
