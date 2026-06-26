@@ -104,15 +104,15 @@ authenticateSudo() {
     # Only prompt for sudo if we need it and it's available
     if [ -n "$SUDO_CMD" ] && [ "$SUDO_CMD" = "sudo" ]; then
         printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Authenticating sudo access${RC}\n"
-        
+
         # This will prompt for password if needed and cache credentials
         if ! ${SUDO_CMD} -v; then
             printf "${BOLD}${RED}==>${RC} Failed to authenticate sudo access\n"
             exit 1
         fi
-        
+
         printf "${BOLD}${GREEN}==>${RC} Sudo authentication successful!\n\n"
-        
+
         # Keep sudo alive in background (optional - refreshes every 60 seconds)
         # This prevents timeout during long operations
         while true; do
@@ -344,6 +344,28 @@ installOhMyPosh() {
 }
 
 ##################################################################################
+#####   Function to install zoxide
+##################################################################################
+installZoxide() {
+
+    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install zoxide${RC}\n"
+    start_spinner "Installing..."
+
+    {
+        local message
+
+        if command_exists zoxide; then
+            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}zoxide${RC} is already present!"
+        else
+            curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+            message="${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}zoxide${RC}."
+        fi
+    } >> "$LOG_FILE" 2>&1
+
+    stop_spinner "$message"
+}
+
+##################################################################################
 #####   Function to install fzf
 ##################################################################################
 installFzf() {
@@ -482,16 +504,16 @@ head() {
     codename=$(lsb_release -c | cut -f2-)
 
     clear
-    
+
     cat << EOF
-                     /\$\$            
-                    | \$\$            
- /\$\$\$\$\$\$\$\$  /\$\$\$\$\$\$\$| \$\$\$\$\$\$       
-|____ /\$\$/ /\$\$_____/| \$\$__  \$\$      ${BOLD}${ITALIC}${YELLOW}OS Name${RC}     : $os_name      
+                     /\$\$
+                    | \$\$
+ /\$\$\$\$\$\$\$\$  /\$\$\$\$\$\$\$| \$\$\$\$\$\$
+|____ /\$\$/ /\$\$_____/| \$\$__  \$\$      ${BOLD}${ITALIC}${YELLOW}OS Name${RC}     : $os_name
    /\$\$\$\$/ |  \$\$\$\$\$\$ | \$\$  \ \$\$      ${BOLD}${ITALIC}${YELLOW}Description${RC} : $desc
   /\$\$__/   \____  \$\$| \$\$  | \$\$      ${BOLD}${ITALIC}${YELLOW}OS Version${RC}  : $version
  /\$\$\$\$\$\$\$\$ /\$\$\$\$\$\$\$/| \$\$  | \$\$      ${BOLD}${ITALIC}${YELLOW}Code Name${RC}   : $codename
-|________/|_______/ |__/  |__/      
+|________/|_______/ |__/  |__/
 EOF
     echo ""
     echo ""
@@ -511,5 +533,6 @@ installZsh
 installOhMyPosh
 installFzf
 installEza
+installZoxide
 setupZshConfig
 endLog
