@@ -34,9 +34,6 @@ zinit snippet OMZP::command-not-found
 # Load completions
 autoload -U compinit && compinit
 
-# Add in Oh-My-Posh
-zinit ice depth=1; zinit light jandedobbeleer/oh-my-posh
-
 # Replay cached completions
 zinit cdreplay -q
 
