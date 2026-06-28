@@ -5,15 +5,15 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'README.md'
-      - '.gitignore'
-      - '.github/**'
+      - "README.md"
+      - ".gitignore"
+      - ".github/**"
   workflow_dispatch:
     inputs:
       bump_type:
-        description: 'Version bump type'
+        description: "Version bump type"
         required: false
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
           - test
@@ -54,7 +54,6 @@ jobs:
             checkbashisms "$file" || true
           done
 
-  
   lint:
     runs-on: ubuntu-latest
 
@@ -126,7 +125,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: patch
-          
+
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v5
@@ -135,7 +134,7 @@ jobs:
           toTag: ${{ steps.bump.outputs.new_tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:

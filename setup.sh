@@ -32,11 +32,33 @@ DEPENDENCIES=""
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 LOG_FILE="installation.log"
 
+trap 'kill -9 "$spinner_pid" 2>/dev/null; printf "\n"' EXIT
+
+##################################################################################
+#####   Output helpers
+##################################################################################
+# Section header: ==> Title
+print_step() {
+    printf '%s==>%s %s%s%s\n' \
+        "${BOLD}${BLUE}" "${RC}" "${BOLD}${ITALIC}${YELLOW}" "$1" "${RC}"
+}
+
+# Status line builders (==> message), no trailing newline
+msg_ok()   { printf '%s==>%s %s' "${BOLD}${GREEN}"  "${RC}" "$1"; }
+msg_err()  { printf '%s==>%s %s' "${BOLD}${RED}"    "${RC}" "$1"; }
+msg_warn() { printf '%s==>%s %s' "${BOLD}${YELLOW}" "${RC}" "$1"; }
+
+# "Installation skipped - <tool> is already present!"
+msg_skip() {
+    printf '%s==>%s Installation skipped - %s%s%s is already present!' \
+        "${BOLD}${GREEN}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}"
+}
+
 ##################################################################################
 #####   Log file
 ##################################################################################
 startLog() {
-    > "$LOG_FILE"
+    true > "$LOG_FILE"
     echo "" >> "$LOG_FILE"
     echo "=== Setup started at $(date) ===" >> "$LOG_FILE"
 }
@@ -103,15 +125,15 @@ command_exists() {
 authenticateSudo() {
     # Only prompt for sudo if we need it and it's available
     if [ -n "$SUDO_CMD" ] && [ "$SUDO_CMD" = "sudo" ]; then
-        printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Authenticating sudo access${RC}\n"
+        print_step "Authenticating sudo access"
 
         # This will prompt for password if needed and cache credentials
         if ! ${SUDO_CMD} -v; then
-            printf "${BOLD}${RED}==>${RC} Failed to authenticate sudo access\n"
+            printf '%b\n' "$(msg_err "Failed to authenticate sudo access")"
             exit 1
         fi
 
-        printf "${BOLD}${GREEN}==>${RC} Sudo authentication successful!\n\n"
+        printf '%b\n\n' "$(msg_ok "Sudo authentication successful!")"
 
         # Keep sudo alive in background (optional - refreshes every 60 seconds)
         # This prevents timeout during long operations
@@ -128,7 +150,7 @@ authenticateSudo() {
 ##################################################################################
 checkEnv() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Check the environment for necessary tools and permissions${RC}\n"
+    print_step "Check the environment for necessary tools and permissions"
     start_spinner "Checking..."
 
     {
@@ -140,7 +162,7 @@ checkEnv() {
         REQUIREMENTS="curl sudo"
         for req in $REQUIREMENTS; do
             if ! command_exists "$req"; then
-                req_message="${BOLD}${RED}==>${RC} Missing required command: $req"
+                req_message="$(msg_err "Missing required command: $req")"
                 exit 1
             fi
         done
@@ -150,13 +172,13 @@ checkEnv() {
         for pgm in $PACKAGEMANAGER; do
             if command_exists "$pgm"; then
                 PACKAGER="$pgm"
-                pm_message="${BOLD}${GREEN}==>${RC} Using ${BOLD}${ITALIC}${MAGENTA}$pgm${RC} for package manager."
+                pm_message="$(msg_ok "Using ${BOLD}${ITALIC}${MAGENTA}$pgm${RC} for package manager.")"
                 break
             fi
         done
 
         if [ -z "$PACKAGER" ]; then
-            pm_message="${BOLD}${RED}==>${RC} No supported package manager found."
+            pm_message="$(msg_err "No supported package manager found.")"
             exit 1
         fi
 
@@ -164,15 +186,15 @@ checkEnv() {
         if [ "$(id -u)" -eq 0 ]; then
             # Running as root
             SUDO_CMD=""
-            priv_message="${BOLD}${GREEN}==>${RC} Running as root, sudo is not needed."
+            priv_message="$(msg_ok "Running as root, sudo is not needed.")"
         elif command_exists sudo; then
             SUDO_CMD="sudo"
-            priv_message="${BOLD}${GREEN}==>${RC} Using ${BOLD}${ITALIC}${MAGENTA}sudo${RC} for privilege escalation."
+            priv_message="$(msg_ok "Using ${BOLD}${ITALIC}${MAGENTA}sudo${RC} for privilege escalation.")"
         elif command_exists doas && [ -f "/etc/doas.conf" ]; then
             SUDO_CMD="doas"
-            priv_message="${BOLD}${GREEN}==>${RC} Using doas for privilege escalation."
+            priv_message="$(msg_ok "Using doas for privilege escalation.")"
         else
-            priv_message="${BOLD}${RED}==>${RC} No suitable privilege escalation tool found (sudo/doas)."
+            priv_message="$(msg_err "No suitable privilege escalation tool found (sudo/doas).")"
             exit 1
         fi
     } >> "$LOG_FILE" 2>&1
@@ -185,7 +207,7 @@ checkEnv() {
 ##################################################################################
 updateSystem() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Update system packages${RC}\n"
+    print_step "Update system packages"
     start_spinner "Updating..."
 
     # Redirect all output to log file
@@ -209,13 +231,13 @@ updateSystem() {
                 ${SUDO_CMD} "$PACKAGER" update
                 ;;
             *)
-                message="${BOLD}${RED}=>${RC} Unsupported package manager"
+                message="$(msg_err "Unsupported package manager")"
                 exit 1
                 ;;
         esac
     } >> "$LOG_FILE" 2>&1
 
-    message="${BOLD}${GREEN}==>${RC} System packages updated!${RC}"
+    message="$(msg_ok "System packages updated!")"
 
     stop_spinner "$message"
 }
@@ -225,9 +247,9 @@ updateSystem() {
 ##################################################################################
 installDepend() {
     # List of dependencies to install (space-separated, not quoted)
-    DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates"
+    DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates ripgrep"
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install dependencies${RC}\n"
+    print_step "Install dependencies"
     start_spinner "Installing..."
 
     {
@@ -241,9 +263,9 @@ installDepend() {
                 ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
                 cd /opt && ${SUDO_CMD} git clone https://aur.archlinux.org/yay-git.git && ${SUDO_CMD} chown -R "${USER}:${USER}" ./yay-git
                 cd yay-git && makepkg --noconfirm -si
-                aur_message="${BOLD}${GREEN}==>${RC} AUR helper installed!"
+                aur_message="$(msg_ok "AUR helper installed!")"
             else
-                aur_message="${BOLD}${GREEN}==>${RC} AUR helper is already installed!"
+                aur_message="$(msg_ok "AUR helper is already installed!")"
             fi
 
             # Determine which AUR helper to use
@@ -252,7 +274,7 @@ installDepend() {
             elif command_exists paru; then
                 AUR_HELPER="paru"
             else
-                aur_message="${BOLD}${RED}==>${RC} No AUR helper found. Please install ${BOLD}yay${RC} or ${BOLD}paru${RC}."
+                aur_message="$(msg_err "No AUR helper found. Please install ${BOLD}yay${RC} or ${BOLD}paru${RC}.")"
                 exit 1
             fi
             "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
@@ -269,7 +291,7 @@ installDepend() {
         esac
     } >> "$LOG_FILE" 2>&1
 
-    message="${BOLD}${GREEN}==>${RC} Dependencies installed!${RC}"
+    message="$(msg_ok "Dependencies installed!")"
 
     stop_spinner "$aur_message" "$message"
 }
@@ -279,7 +301,7 @@ installDepend() {
 ##################################################################################
 installZsh() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install zsh${RC}\n"
+    print_step "Install zsh"
     start_spinner "Installing..."
 
     {
@@ -296,10 +318,38 @@ installZsh() {
                 ${SUDO_CMD} "$PACKAGER" install -y zsh
                 ;;
             esac
-            message="${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}zsh${RC}."
+            message="$(msg_ok "Successfully installed ${BOLD}zsh${RC}.")"
         else
-            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}zsh${RC} is already present!"
+            message="$(msg_skip "zsh")"
         fi
+
+    } >> "$LOG_FILE" 2>&1
+
+    stop_spinner "$message"
+}
+
+##################################################################################
+#####   Function to configure zsh environment
+##################################################################################
+configureZshEnv() {
+
+    print_step "Configure zsh environment"
+    start_spinner "Configuring..."
+
+    {
+        local message
+
+        ${SUDO_CMD} tee -a /etc/zsh/zshenv <<-'EOF'
+		if [[ -z "$XDG_CONFIG_HOME" ]]
+		then
+		    export XDG_CONFIG_HOME="$HOME/.config"
+		fi
+		if [[ -d "$XDG_CONFIG_HOME/zsh" ]]
+		then
+		    export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+		fi
+		EOF
+        message="$(msg_ok "Zsh environment configured successfully!")"
     } >> "$LOG_FILE" 2>&1
 
     stop_spinner "$message"
@@ -310,7 +360,7 @@ installZsh() {
 ##################################################################################
 installOhMyPosh() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install oh-my-posh${RC}\n"
+    print_step "Install oh-my-posh"
     start_spinner "Installing..."
 
     {
@@ -319,23 +369,22 @@ installOhMyPosh() {
         local message
 
         if command_exists oh-my-posh; then
-            # message="${BOLD}${GREEN}==>${RC} ${BOLD}oh-my-posh${RC} is already installed!"
-            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}oh-my-posh${RC} is already present!"
+            message="$(msg_skip "oh-my-posh")"
         fi
 
         # Check if the ./local/bin exists
         LOCALBINFOLDER="$HOME/.local/bin"
         if [ ! -d "$LOCALBINFOLDER" ]; then
-            mkdir_message="${BOLD}${YELLOW}==>${RC} Creating directory: $LOCALBINFOLDER"
+            mkdir_message="$(msg_warn "Creating directory: $LOCALBINFOLDER")"
             mkdir -p "$LOCALBINFOLDER"
-            mkdir_confirm="${BOLD}${GREEN}==>${RC} Directory created: $LOCALBINFOLDER"
+            mkdir_confirm="$(msg_ok "Directory created: $LOCALBINFOLDER")"
         fi
 
         # Install Oh My Posh
         if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
-            massage="${BOLD}${GREEN} ==>${RC} Successfully installed ${BOLD}oh-my-posh${RC}!"
+            message="$(msg_ok "Successfully installed ${BOLD}oh-my-posh${RC}!")"
         else
-            message="${BOLD}${RED}==>${RC} Something went wrong during ${BOLD}oh-my-posh${RC} install!"
+            message="$(msg_err "Something went wrong during ${BOLD}oh-my-posh${RC} install!")"
             exit 1
         fi
     } >> "$LOG_FILE" 2>&1
@@ -348,17 +397,17 @@ installOhMyPosh() {
 ##################################################################################
 installZoxide() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install zoxide${RC}\n"
+    print_step "Install zoxide"
     start_spinner "Installing..."
 
     {
         local message
 
         if command_exists zoxide; then
-            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}zoxide${RC} is already present!"
+            message="$(msg_skip "zoxide")"
         else
             curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-            message="${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}zoxide${RC}."
+            message="$(msg_ok "Successfully installed ${BOLD}zoxide${RC}.")"
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -370,22 +419,21 @@ installZoxide() {
 ##################################################################################
 installFzf() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install fzf${RC}\n"
+    print_step "Install fzf"
     start_spinner "Installing..."
 
     {
         local clone_messsage
         local message
 
-        if command_exists fzf || [ -d "$HOME/.fzf" ]; then
-            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}fzf${RC} is already present!"
+        if command_exists fzf; then
+            message="$(msg_skip "fzf")"
         else
-            SUDO_CMD "${PACKAGER}" install -y fzf 2>/dev/null || {
-                clone_messsage="${BOLD}${YELLOW}==>${RC} ${BOLD}fzf${RC} not available in package manager. Cloning from GitHub..."
-                git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-                ~/.fzf/install --all # non-interactive, auto “yes” to everything
-            }
-            message="${BOLD}${GREEN}==>${RC} Successfully installed ${BOLD}fzf${RC}."
+            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+            ~/.fzf/install --bin
+            mkdir -p "$HOME/.local/bin"
+            ln -sf "$HOME/.fzf/bin/fzf" "$HOME/.local/bin/fzf"
+            message="$(msg_ok "Successfully installed ${BOLD}fzf${RC}.")"
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -397,7 +445,7 @@ installFzf() {
 ##################################################################################
 installEza() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Install eza${RC}\n"
+    print_step "Install eza"
     start_spinner "Installing..."
 
     {
@@ -408,10 +456,34 @@ installEza() {
             ${SUDO_CMD} chmod +x eza
             ${SUDO_CMD} chown root:root eza
             ${SUDO_CMD} mv eza /usr/local/bin/eza
-            message="${BOLD}${GREEN}==> ${RC} Successfully installed ${BOLD}eza${RC}."
+            message="$(msg_ok "Successfully installed ${BOLD}eza${RC}.")"
         else
-            # message="${BOLD}${GREEN}==>${RC} ${BOLD}eza${RC} is already installed."
-            message="${BOLD}${GREEN}==>${RC} Installation skipped - ${BOLD}${ITALIC}${MAGENTA}eza${RC} is already present!"
+            message="$(msg_skip "eza")"
+        fi
+    } >> "$LOG_FILE" 2>&1
+
+    stop_spinner "$message"
+}
+
+##################################################################################
+#####   Function to install fd
+##################################################################################
+installFd() {
+
+    print_step "Install fd"
+    start_spinner "Installing..."
+
+    {
+        local message
+
+        if command_exists fd; then
+            message="$(msg_skip "fd")"
+        else
+            cd /tmp || exit
+            wget -c https://github.com/sharkdp/fd/releases/latest/download/fd-musl_x86_64-unknown-linux-musl.tar.gz -O - | tar xz
+            ${SUDO_CMD} mv fd-*/fd /usr/local/bin/fd
+            ${SUDO_CMD} chmod +x /usr/local/bin/fd
+            message="$(msg_ok "Successfully installed ${BOLD}fd${RC}.")"
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -423,8 +495,8 @@ installEza() {
 ##################################################################################
 setupZshConfig() {
 
-    printf "${BOLD}${BLUE}==>${RC} ${BOLD}${ITALIC}${YELLOW}Setup zsh configuration${RC}\n"
-    start_spinner "Configuring...${RC}"
+    print_step "Setup zsh configuration"
+    start_spinner "Configuring..."
 
     {
         local message
@@ -434,20 +506,14 @@ setupZshConfig() {
 
         # Clone dotfiles repo
         cd "$DOTFILES_DIR" || {
-            err_message="${BOLD}${RED}==>${RC} Dotfiles directory '$DOTFILES_DIR' not found"
+            err_message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
             exit 1
         }
 
         # Check if stow is available
         if ! command_exists stow; then
-            err_message="${BOLD}${RED}==>${RC} ${BOLD}Stow${RC} is not installed. Please install it first."
+            err_message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
             exit 1
-        fi
-
-        # Check if ~/.zshrc exists if backup it
-        if [ -f "$HOME/.zshrc" ]; then
-            mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
-            message="${GREEN}zsh configuration file backup in ~/.zshrc.bak${RC}"
         fi
 
         # Check if ~/.nanorc exists
@@ -456,54 +522,68 @@ setupZshConfig() {
             message="${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}"
         fi
 
-        # Create a dry run first to check for conflicts
-        message="${BOLD}${YELLOW}==>${RC} Checking for potential conflicts..."
+        # Do stow dry run first to check for conflicts
+        message="$(msg_warn "Checking for potential stow conflicts...")"
 
         if ! stow -n .; then
-            err_message="${BOLD}${RED}==>${RC} ${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts."
+            err_message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
             exit 1
         fi
 
         # If dry run successful, perform actual stow
-        message="${BOLD}${YELLOW}==>${RC} Creating symlinks..."
+        message="$(msg_warn "Creating symlinks...")"
 
         if ! stow -t "$HOME" .; then
-            err_message="${BOLD}${RED}==>${RC} Failed to create symlinks."
+            err_message="$(msg_err "Failed to create symlinks.")"
             exit 1
         fi
 
         # Verify critical files were linked
-        if [ ! -L "$HOME/.zshrc" ]; then
-            err_message="${BOLD}${RED}==>${RC} Failed to create ${BOLD}.zshrc${RC} symlink."
+        if [ ! -f "$HOME/.config/zsh/.zshrc" ]; then
+            err_message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
             exit 1
         fi
 
         # Change default shell to zsh for current user
-        sudo chsh -s "$(which zsh)" "$USER"
+        ${SUDO_CMD} chsh -s "$(which zsh)" "$USER"
 
-        success_message="${BOLD}${GREEN}==>${RC} Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!"
+        # Create required directories
+        mkdir -p "$HOME/.local/state/zsh"   # history
+        mkdir -p "$HOME/.cache/zsh"         # completion cache
 
-        # Optionally source the new configuration
-        if [ -f "$HOME/.zshrc" ]; then
-            continue_message="${BOLD}${GREEN}==>${RC} Please execute ${BOLD}${ITALIC}${MAGENTA}exec zsh${RC} and the installation will continue ..."
-        fi
+        success_message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
+
+        # Source the new configuration
+        continue_message="$(msg_ok "Please execute ${BOLD}${ITALIC}${MAGENTA}exec zsh${RC} and the installation will continue ...")"
 
     } >> "$LOG_FILE" 2>&1
 
     stop_spinner "$err_message" "$success_message" "$continue_message"
 }
 
+##################################################################################
+##### Head
+##################################################################################
 head() {
     echo ""
     echo ""
 
     # Define and format output using printf to control line width (80 characters)
-    os_name=$(lsb_release -i | cut -f2-)
-    desc=$(lsb_release -d | cut -f2-)
-    version=$(lsb_release -r | cut -f2-)
-    codename=$(lsb_release -c | cut -f2-)
+    if [ -f /etc/os-release ]; then
+        # shellcheck source=/dev/null
+        . /etc/os-release
+        os_name="${ID^}"          # e.g. "Ubuntu" or "Debian"
+        desc="${PRETTY_NAME}"     # e.g. "Debian GNU/Linux 12 (bookworm)"
+        version="${VERSION_ID}"   # e.g. "12"
+        codename="${VERSION_CODENAME}" # e.g. "bookworm"
+    else
+        os_name="Unknown"
+        desc="Unknown"
+        version="Unknown"
+        codename="Unknown"
+    fi
 
-    clear
+    [ -t 1 ] && clear
 
     cat << EOF
                      /\$\$
@@ -530,9 +610,11 @@ authenticateSudo
 updateSystem
 installDepend
 installZsh
+configureZshEnv
 installOhMyPosh
 installFzf
 installEza
+installFd
 installZoxide
 setupZshConfig
 endLog

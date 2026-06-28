@@ -1,0 +1,99 @@
+"$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+
+version     = 2
+final_space = false
+
+[[blocks]]
+type      = "prompt"
+alignment = "left"
+
+  # ── Directory ───────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "path"
+  style      = "plain"
+  foreground = "cyan"
+  template   = "{{ .Path }} "
+
+  [blocks.segments.properties]
+  style                 = "agnoster_short"
+  max_depth             = 4
+  folder_separator_icon = "/"
+
+  # ── OS ──────────────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "os"
+  style      = "plain"
+  foreground = "#0080ff"
+  template   = "{{ .Icon }} "
+
+  [blocks.segments.properties]
+  ubuntu = "󰕈"
+  arch   = "󰣇"
+  macos  = ""
+
+  # ── Git (branch + status combined) ──────────────────────────────────────────
+  # Starship splits git_branch and git_status into two segments; in oh-my-posh
+  # a single "git" segment handles both via a Go template.
+  [[blocks.segments]]
+  type       = "git"
+  style      = "plain"
+  foreground = "magenta"
+  template   = """{{ if .HEAD }}\
+ {{ .HEAD }}\
+{{ end }}\
+{{ if .Working.Changed }}\
+{{ if gt .Working.Added 0 }}{{ " " }}[?{{ .Working.Added }} ](white){{ end }}\
+{{ if gt .Working.Modified 0 }}[●{{ .Working.Modified }} ](yellow){{ end }}\
+{{ if gt .Working.Deleted 0 }}[✘{{ .Working.Deleted }} ](red){{ end }}\
+{{ if gt .Working.Unmerged 0 }}[⚡{{ .Working.Unmerged }} ](red){{ end }}\
+{{ end }}\
+{{ if .Staging.Changed }}\
+[+{{ .Staging.Added }} ](green)\
+{{ end }}\
+{{ if gt .Ahead 0 }}[⇡{{ .Ahead }}](cyan){{ end }}\
+{{ if gt .Behind 0 }}[⇣{{ .Behind }} ](cyan){{ end }}\
+"""
+
+  [blocks.segments.properties]
+  branch_icon         = " "
+  fetch_status        = true
+  fetch_upstream_icon = true
+
+  # ── Node.js ─────────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "node"
+  style      = "plain"
+  foreground = "green"
+  template   = " {{ .Full }} "
+
+  # ── Rust ────────────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "rust"
+  style      = "plain"
+  foreground = "red"
+  template   = " {{ .Full }} "
+
+  # ── Go ──────────────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "go"
+  style      = "plain"
+  foreground = "cyan"
+  template   = " {{ .Full }} "
+
+  # ── PHP ─────────────────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type       = "php"
+  style      = "plain"
+  foreground = "magenta"
+  template   = " {{ .Full }} "
+
+  # ── Prompt character ─────────────────────────────────────────────────────────
+  [[blocks.segments]]
+  type = "exit"
+  style = "plain"
+  foreground_templates = [
+    "{{ if eq .Code 0 }}green{{ end }}",
+    "{{ if ne .Code 0 }}red{{ end }}",
+  ]
+  foreground = "red"
+  template   = "{{ if eq .Code 0 }}❯{{ else }}❯{{ end }} "
