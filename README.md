@@ -20,17 +20,18 @@ Installed tools: `zsh`, `stow`, `eza`, `fzf`, `fd`, `zoxide`, `oh-my-posh`.
 ## What's included
 
 ```
-.config/
-├── alacritty/    # terminal emulator
-├── kitty/        # terminal emulator
-├── eza/          # ls replacement theme
-├── fastfetch/    # system info
-├── nvim/         # Neovim (AstroNvim)
-├── oh-my-posh/   # prompt themes
-├── rofi/         # app launcher + themes
-└── zsh/          # .zshrc, .zshenv, aliases, bindings, fzf, plugins, prompt
-.nanorc           # nano config
-setup.sh          # installer
+ .
+├──  .config
+│   ├──  alacritty     # terminal emulator
+│   ├──  eza           # ls replacement theme
+│   ├──  fastfetch     # system info
+│   ├──  kitty         # terminal emulato
+│   ├──  nvim          # Neovim (AstroNvim)
+│   ├──  oh-my-posh    # prompt themes
+│   ├──  rofi          # app launcher + themes
+│   └──  zsh           # .zshrc, .zshenv, aliases, bindings, fzf, plugins, prompt
+├──  .nanorc           # nano config
+└──  setup.sh          # installer
 ```
 
 ## Plugins
