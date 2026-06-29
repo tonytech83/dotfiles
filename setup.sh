@@ -258,6 +258,13 @@ installDepend() {
 
         case "$PACKAGER" in
         pacman)
+            # Fresh pacman installs can have an uninitialized/stale keyring,
+            # which makes signatures fail to verify ("unknown trust"). Re-establish
+            # trust from the locally shipped keyrings before installing. Calling
+            # --populate without a name imports every keyring present, so this works
+            # on any pacman-based distro (Arch, Manjaro, EndeavourOS, ...).
+            ${SUDO_CMD} pacman-key --init
+            ${SUDO_CMD} pacman-key --populate
             ${SUDO_CMD} "${PACKAGER}" -S --needed --noconfirm ${DEPENDENCIES}
             ;;
         dnf | yum | zypper | apt | apt-get)
