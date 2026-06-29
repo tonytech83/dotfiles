@@ -260,7 +260,7 @@ installDepend() {
         pacman)
             ${SUDO_CMD} pacman-key --init
             ${SUDO_CMD} "${PACKAGER}" -Sy --needed --noconfirm archlinux-keyring
-            ${SUDO_CMD} "${PACKAGER}" -S --needed --noconfirm ${DEPENDENCIES}
+            ${SUDO_CMD} "${PACKAGER}" -Syu --needed --noconfirm ${DEPENDENCIES}
             ;;
         dnf | yum | zypper | apt | apt-get)
             ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
