@@ -253,31 +253,12 @@ installDepend() {
     start_spinner "Installing..."
 
     {
-        local aur_message
         local message
+        local install_status
 
         case "$PACKAGER" in
         pacman)
-            # Install AUR helper if not present
-            if ! command_exists yay && ! command_exists paru; then
-                ${SUDO_CMD} "${PACKAGER}" --noconfirm -S base-devel
-                cd /opt && ${SUDO_CMD} git clone https://aur.archlinux.org/yay-git.git && ${SUDO_CMD} chown -R "${USER}:${USER}" ./yay-git
-                cd yay-git && makepkg --noconfirm -si
-                aur_message="$(msg_ok "AUR helper installed!")"
-            else
-                aur_message="$(msg_ok "AUR helper is already installed!")"
-            fi
-
-            # Determine which AUR helper to use
-            if command_exists yay; then
-                AUR_HELPER="yay"
-            elif command_exists paru; then
-                AUR_HELPER="paru"
-            else
-                aur_message="$(msg_err "No AUR helper found. Please install ${BOLD}yay${RC} or ${BOLD}paru${RC}.")"
-                exit 1
-            fi
-            "${AUR_HELPER}" --noconfirm -S ${DEPENDENCIES}
+            ${SUDO_CMD} "${PACKAGER}" -S --needed --noconfirm ${DEPENDENCIES}
             ;;
         dnf | yum | zypper | apt | apt-get)
             ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
@@ -289,11 +270,20 @@ installDepend() {
             ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
             ;;
         esac
+        install_status=$?
+
+        if [ "$install_status" -eq 0 ]; then
+            message="$(msg_ok "Dependencies installed!")"
+        else
+            message="$(msg_err "Something went wrong while installing dependencies! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+        fi
     } >> "$LOG_FILE" 2>&1
 
-    message="$(msg_ok "Dependencies installed!")"
+    stop_spinner "$message"
 
-    stop_spinner "$aur_message" "$message"
+    if [ "$install_status" -ne 0 ]; then
+        exit 1
+    fi
 }
 
 ##################################################################################
