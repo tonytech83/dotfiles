@@ -120,6 +120,13 @@ command_exists() {
 }
 
 ##################################################################################
+#####   Function to verify a tool is available after installing
+##################################################################################
+verify_installed() {
+    PATH="$HOME/.local/bin:/usr/local/bin:$PATH" command -v "$1" >/dev/null 2>&1
+}
+
+##################################################################################
 #####   Function to authenticate sudo early
 ##################################################################################
 authenticateSudo() {
@@ -310,7 +317,11 @@ installZsh() {
                 ${SUDO_CMD} "$PACKAGER" install -y zsh
                 ;;
             esac
-            message="$(msg_ok "Successfully installed ${BOLD}zsh${RC}.")"
+            if verify_installed zsh; then
+                message="$(msg_ok "Successfully installed ${BOLD}zsh${RC}.")"
+            else
+                message="$(msg_err "Installation of ${BOLD}zsh${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         else
             message="$(msg_skip "zsh")"
         fi
@@ -362,22 +373,21 @@ installOhMyPosh() {
 
         if command_exists oh-my-posh; then
             message="$(msg_skip "oh-my-posh")"
-        fi
-
-        # Check if the ./local/bin exists
-        LOCALBINFOLDER="$HOME/.local/bin"
-        if [ ! -d "$LOCALBINFOLDER" ]; then
-            mkdir_message="$(msg_warn "Creating directory: $LOCALBINFOLDER")"
-            mkdir -p "$LOCALBINFOLDER"
-            mkdir_confirm="$(msg_ok "Directory created: $LOCALBINFOLDER")"
-        fi
-
-        # Install Oh My Posh
-        if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin; then
-            message="$(msg_ok "Successfully installed ${BOLD}oh-my-posh${RC}!")"
         else
-            message="$(msg_err "Something went wrong during ${BOLD}oh-my-posh${RC} install!")"
-            exit 1
+            # Check if the ./local/bin exists
+            LOCALBINFOLDER="$HOME/.local/bin"
+            if [ ! -d "$LOCALBINFOLDER" ]; then
+                mkdir_message="$(msg_warn "Creating directory: $LOCALBINFOLDER")"
+                mkdir -p "$LOCALBINFOLDER"
+                mkdir_confirm="$(msg_ok "Directory created: $LOCALBINFOLDER")"
+            fi
+
+            # Install Oh My Posh
+            if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin && verify_installed oh-my-posh; then
+                message="$(msg_ok "Successfully installed ${BOLD}oh-my-posh${RC}!")"
+            else
+                message="$(msg_err "Installation of ${BOLD}oh-my-posh${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -399,7 +409,11 @@ installZoxide() {
             message="$(msg_skip "zoxide")"
         else
             curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-            message="$(msg_ok "Successfully installed ${BOLD}zoxide${RC}.")"
+            if verify_installed zoxide; then
+                message="$(msg_ok "Successfully installed ${BOLD}zoxide${RC}.")"
+            else
+                message="$(msg_err "Installation of ${BOLD}zoxide${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -425,7 +439,11 @@ installFzf() {
             ~/.fzf/install --bin
             mkdir -p "$HOME/.local/bin"
             ln -sf "$HOME/.fzf/bin/fzf" "$HOME/.local/bin/fzf"
-            message="$(msg_ok "Successfully installed ${BOLD}fzf${RC}.")"
+            if verify_installed fzf; then
+                message="$(msg_ok "Successfully installed ${BOLD}fzf${RC}.")"
+            else
+                message="$(msg_err "Installation of ${BOLD}fzf${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -442,15 +460,19 @@ installEza() {
 
     {
         local message
-        if ! command_exists eza; then
+        if command_exists eza; then
+            message="$(msg_skip "eza")"
+        else
             cd /tmp || exit
-            wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
+            wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-musl.tar.gz -O - | tar xz
             ${SUDO_CMD} chmod +x eza
             ${SUDO_CMD} chown root:root eza
             ${SUDO_CMD} mv eza /usr/local/bin/eza
-            message="$(msg_ok "Successfully installed ${BOLD}eza${RC}.")"
-        else
-            message="$(msg_skip "eza")"
+            if verify_installed eza; then
+                message="$(msg_ok "Successfully installed ${BOLD}eza${RC}.")"
+            else
+                message="$(msg_err "Installation of ${BOLD}eza${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         fi
     } >> "$LOG_FILE" 2>&1
 
@@ -476,7 +498,11 @@ installFd() {
             wget -c "https://github.com/sharkdp/fd/releases/download/${fd_version}/fd-${fd_version}-x86_64-unknown-linux-musl.tar.gz" -O - | tar xz
             ${SUDO_CMD} mv fd-*/fd /usr/local/bin/fd
             ${SUDO_CMD} chmod +x /usr/local/bin/fd
-            message="$(msg_ok "Successfully installed ${BOLD}fd${RC}.")"
+            if verify_installed fd; then
+                message="$(msg_ok "Successfully installed ${BOLD}fd${RC}.")"
+            else
+                message="$(msg_err "Installation of ${BOLD}fd${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+            fi
         fi
     } >> "$LOG_FILE" 2>&1
 
