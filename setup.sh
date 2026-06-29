@@ -134,9 +134,9 @@ authenticateSudo() {
     if [ -n "$SUDO_CMD" ] && [ "$SUDO_CMD" = "sudo" ]; then
         print_step "Authenticating sudo access"
 
-        # This will prompt for password if needed and cache credentials
-        if ! ${SUDO_CMD} -v; then
-            printf '%b\n' "$(msg_err "Failed to authenticate sudo access")"
+        # Validate we can use sudo non-interactively (e.g. passwordless/NOPASSWD)
+        if ! ${SUDO_CMD} -n true; then
+            printf '%b\n' "$(msg_err "Failed to authenticate sudo access (passwordless sudo required)")"
             exit 1
         fi
 
@@ -217,10 +217,11 @@ updateSystem() {
     print_step "Update system packages"
     start_spinner "Updating..."
 
+    local message
+    local unsupported=0
+
     # Redirect all output to log file
     {
-        local message
-
         case "$PACKAGER" in
             pacman)
                 ${SUDO_CMD} "$PACKAGER" -Sy
@@ -238,11 +239,16 @@ updateSystem() {
                 ${SUDO_CMD} "$PACKAGER" update
                 ;;
             *)
-                message="$(msg_err "Unsupported package manager")"
-                exit 1
+                unsupported=1
                 ;;
         esac
     } >> "$LOG_FILE" 2>&1
+
+    if [ "$unsupported" -eq 1 ]; then
+        message="$(msg_err "Unsupported package manager: ${PACKAGER}")"
+        stop_spinner "$message"
+        exit 1
+    fi
 
     message="$(msg_ok "System packages updated!")"
 
@@ -341,8 +347,26 @@ configureZshEnv() {
 
     {
         local message
+        local zshenv_path
+        local os_id
+        local os_like
 
-        ${SUDO_CMD} tee -a /etc/zsh/zshenv <<-'EOF'
+        # zsh's global config dir varies:
+        # Debian/Arch/Alpine use /etc/zsh,
+        # RHEL/Fedora-family use /etc/zshenv
+        zshenv_path="/etc/zsh/zshenv"
+        if [ -r /etc/os-release ]; then
+            os_id=$(. /etc/os-release && echo "$ID")
+            os_like=$(. /etc/os-release && echo "$ID_LIKE")
+        fi
+        case " ${os_id} ${os_like} " in
+            *" rhel "* | *" fedora "* | *" centos "*)
+                zshenv_path="/etc/zshenv"
+                ;;
+        esac
+
+        ${SUDO_CMD} mkdir -p "$(dirname "$zshenv_path")"
+        ${SUDO_CMD} tee -a "$zshenv_path" <<-'EOF'
 		if [[ -z "$XDG_CONFIG_HOME" ]]
 		then
 		    export XDG_CONFIG_HOME="$HOME/.config"
@@ -617,7 +641,6 @@ EOF
     echo ""
     echo ""
 }
-
 
 ##################################################################################
 #####   Execute the functions in order
