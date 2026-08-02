@@ -28,7 +28,7 @@ checkEnv(){
     if [ -z "$PACKAGER" ]; then
         printf "%s%s%s No supported package manager found.\n" "${BOLD}${RED}" "✗" "${RC}"
         exit 1
-    fi  
+    fi
 }
 
 upgrade() {
@@ -37,7 +37,7 @@ upgrade() {
             sudo "$PACKAGER" -Syu
             ;;
         apt-get)
-            sudo "$PACKAGER" update && sudo $PACKAGER" upgrade -y
+            sudo "$PACKAGER" update && sudo "$PACKAGER" upgrade -y
             ;;
         dnf|yum)
             sudo "$PACKAGER" update -y
@@ -49,16 +49,16 @@ upgrade() {
             sudo "$PACKAGER" update && sudo "$PACKAGER" upgrade
             ;;
         *)
-            unsupported=1
+            printf "%s%s%s Unsupported package manager: %s\n" "${BOLD}${RED}" "✗" "$PACKAGER"
+            exit 1
             ;;
     esac
 
-    if [ "$unsupported" -eq 1 ]; then
-        printf "%s%s%s Unsupported package manager: %s\n" "${BOLD}${RED}" "✗" "${RC}" "$PACKAGER"
-        exit 1
+    if [ $? -eq 0 ]; then
+	    printf "%s%s%s System updated successfully.\n" "${BOLD}${GREEN}" "✓" "${RC}"
+	else
+		printf "%s%s%s System update failed.\n" "${BOLD}${RED}" "✗" "${RC}"
     fi
-
-    printf "%s%s%s System updated successfully.\n" "${BOLD}${GREEN}" "✓" "${RC}"
 }
 
 checkEnv
