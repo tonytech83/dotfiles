@@ -69,5 +69,8 @@ source "$ZDOTDIR/bindings.zsh"
 # Plugins and plugin manager
 source "$ZDOTDIR/plugins.zsh"
 
+# Custom functions
+source "$ZDOTDIR/functions.zsh"
+
 # Prompt/theme
 source "$ZDOTDIR/prompt.zsh"
