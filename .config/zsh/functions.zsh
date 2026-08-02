@@ -37,13 +37,13 @@ upgrade() {
             sudo "$PACKAGER" -Syu
             ;;
         apt-get)
-            sudo "$PACKAGER" update && "$PACKAGER" upgrade -y
+            sudo "$PACKAGER" update && sudo $PACKAGER" upgrade -y
             ;;
         dnf|yum)
             sudo "$PACKAGER" update -y
             ;;
         zypper)
-            sudo "$PACKAGER" --non-interactive refresh && "$PACKAGER" --non-interactive update 
+            sudo "$PACKAGER" --non-interactive refresh && sudo "$PACKAGER" --non-interactive update 
             ;;
         apk)
             sudo "$PACKAGER" update && sudo "$PACKAGER" upgrade
