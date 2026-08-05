@@ -123,7 +123,7 @@ final_space = true
 [[blocks.segments]]
   type = "python"
   style = "plain"
-  template = "<b><p:white> via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
+  template = "<b><p:white>via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
   foreground = "p:gray"
   background = "transparent"
 
