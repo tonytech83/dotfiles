@@ -1,4 +1,6 @@
-[![CI](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/ci.yml?branch=main&label=Lint%20Test%20%26%20Release&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/ci.yml)
+
+[![Test](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/test.yml?branch=main&label=Test&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/release.yml?branch=main&label=Release&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/release.yml)
 [![Version](https://img.shields.io/github/v/release/tonytech83/dotfiles?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/tonytech83/dotfiles/releases)
 
 # dotfiles
