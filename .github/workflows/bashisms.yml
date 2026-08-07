@@ -1,0 +1,45 @@
+name: Check for bashisms
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - "*.sh"
+  merge_group:
+  workflow_dispatch:
+
+jobs:
+  bashisms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # Get the list of script files in the root folder
+      - name: Get a list of script files
+        id: get_sh_files
+        run: |
+          if sh_files=$(find . -type f -name "*.sh" -print); then
+            echo "Shell files found:"
+            echo "$sh_files"
+            echo "has_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_files=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install devscripts
+        if: steps.get_sh_files.outputs.has_files == 'true'
+        run: sudo apt-get update && sudo apt-get install -y devscripts
+
+      - name: Check for bashisms
+        if: steps.get_sh_files.outputs.has_files == 'true'
+        run: |
+          find . -type f -name "*.sh" -print0 | while IFS= read -r -d '' file; do
+            echo "Running checkbashisms for $file"
+            checkbashisms "$file" || true
+          done

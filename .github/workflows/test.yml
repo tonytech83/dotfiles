@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - ".gitignore"
+      - ".github/**"
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup dotfiles
+        run: |
+          chmod +x setup.sh
+          DOTFILES_DIR="$GITHUB_WORKSPACE" ./setup.sh
+
+      - name: Smoke test zsh
+        shell: zsh {0}
+        run: |
+          echo "Zsh version: $ZSH_VERSION"
