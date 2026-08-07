@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - ".gitignore"
+      - ".github/**"
+  workflow_dispatch:
+
+jobs:
+  releaseGithub:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Generate version tag
+        id: bump
+        run: |
+          git fetch --tags
+          previous_tag=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+          new_tag="v$(date +'%y.%m.%d')"
+
+          echo "previous_tag=$previous_tag" >> "$GITHUB_OUTPUT"
+          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
+
+          if git rev-parse -q --verify "refs/tags/$new_tag" >/dev/null; then
+            echo "Tag $new_tag already exists, skipping tag creation"
+            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Creating tag $new_tag"
+            git tag "$new_tag"
+            git push origin "$new_tag"
+            echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Changelog
+        id: github_release
+        if: steps.bump.outputs.tag_exists != 'true'
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: ${{ steps.bump.outputs.previous_tag }}
+          toTag: ${{ steps.bump.outputs.new_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        if: steps.bump.outputs.tag_exists != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.github_release.outputs.changelog }}
+          tag_name: ${{ steps.bump.outputs.new_tag }}
