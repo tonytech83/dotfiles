@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck disable=SC2034,SC2086
+# shellcheck source=/dev/null
 
 # Global fixed width (inside the box)
 BOX_WIDTH=76

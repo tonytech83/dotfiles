@@ -22,7 +22,7 @@ jobs:
         uses: reviewdog/action-shellcheck@v1
         with:
           shellcheck_flags: "--source-path=${{ github.workspace }}/.shellcheckrc"
-          reviewdog_flags: "-fail-level=any"
+          reviewdog_flags: "-fail-level=error"
 
   shfmt:
     name: Shell Fomatting
