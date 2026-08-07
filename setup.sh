@@ -453,7 +453,7 @@ installFzf() {
     start_spinner "Installing..."
 
     {
-        local clone_messsage
+        local clone_message
         local message
 
         if command_exists fzf; then
@@ -471,7 +471,7 @@ installFzf() {
         fi
     } >> "$LOG_FILE" 2>&1
 
-    stop_spinner "$clone_messsage" "$message"
+    stop_spinner "$clone_message" "$message"
 }
 
 ##################################################################################
