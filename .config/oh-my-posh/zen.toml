@@ -2,66 +2,24 @@ console_title_template = "{{ .Shell }} in {{ .Folder }}"
 version = 3
 final_space = true
 
-[[blocks]]
-  type = 'prompt'
-  alignment = 'left'
-  newline = true
-
-  [[blocks.segments]]
-    type = 'path'
-    style = 'plain'
-    background = 'transparent'
-    foreground = 'blue'
-    template = '{{ .Path }}'
-
-    [blocks.segments.properties]
-      style = 'full'
-
-  [[blocks.segments]]
-    type = 'git'
-    style = 'plain'
-    foreground = 'p:grey'
-    background = 'transparent'
-    template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
-
-    [blocks.segments.properties]
-      branch_icon = ''
-      commit_icon = '@'
-      fetch_status = true
-
-[[blocks]]
-  type = 'rprompt'
-  overflow = 'hidden'
-
-  [[blocks.segments]]
-    type = 'executiontime'
-    style = 'plain'
-    foreground = 'yellow'
-    background = 'transparent'
-    template = '{{ .FormattedMs }}'
-
-    [blocks.segments.properties]
-      threshold = 5000
-
-[[blocks]]
-  type = 'prompt'
-  alignment = 'left'
-  newline = true
-
-  [[blocks.segments]]
-    type = 'text'
-    style = 'plain'
-    foreground_templates = [
-      "{{if gt .Code 0}}red{{end}}",
-      "{{if eq .Code 0}}magenta{{end}}",
-    ]
-    background = 'transparent'
-    template = '❯'
+[palette]
+  black = "#2E3440"
+  green = "#A3BE8C"
+  white = "#D8DEE9"
+  gray = "#84868b"
+  blue = "#81A1C1"
+  red = "#BF616A"
+  yellow = "#EBCB8B"
+  purple = "#B48EAD"
+  orange = "#f7931a"
+  darkblue = "#7292b2"
+  cyan-blue = "#06AAE3"
+  yellowgreen = "#9ACD32"
 
 [transient_prompt]
   foreground_templates = [
-    "{{if gt .Code 0}}red{{end}}",
-    "{{if eq .Code 0}}magenta{{end}}",
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:green{{end}}",
   ]
   background = 'transparent'
   template = '❯ '
@@ -70,3 +28,74 @@ final_space = true
   foreground = 'magenta'
   background = 'transparent'
   template = '❯❯ '
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+############################################################################
+##### Path
+############################################################################
+[[blocks.segments]]
+  type = 'path'
+  style = 'plain'
+  background = 'transparent'
+  foreground = 'p:yellow'
+  template = '{{ .Path }}'
+
+  [blocks.segments.properties]
+    style = 'full'
+
+############################################################################
+##### Git
+############################################################################
+[[blocks.segments]]
+  type = 'git'
+  style = 'plain'
+  foreground = 'p:gray'
+  background = 'transparent'
+  template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+
+  [blocks.segments.properties]
+    branch_icon = ''
+    commit_icon = '@'
+    fetch_status = true
+
+############################################################################
+##### Execution time of command
+############################################################################
+[[blocks]]
+type = "rprompt"
+overflow = "hidden"
+
+[[blocks.segments]]
+  type = "executiontime"
+  style = "plain"
+  template = "{{ .FormattedMs }}"
+  foreground = "p:yellow"
+  background = "transparent"
+
+  [blocks.segments.properties]
+    cache_duration = "none"
+    threshold = 1
+
+############################################################################
+##### Main prompt
+############################################################################
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+[[blocks.segments]]
+  type = 'text'
+  style = 'plain'
+  foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:white{{end}}",
+  ]
+  background = 'transparent'
+  template = '❯'
+
+
