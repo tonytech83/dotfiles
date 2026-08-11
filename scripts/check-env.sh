@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2034
+
 ##################################################################################
 #####   Function to check the environment for necessary tools and permissions
 ##################################################################################

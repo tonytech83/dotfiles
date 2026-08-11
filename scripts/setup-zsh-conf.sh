@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2059
+
 ##################################################################################
 ##### Function to setup zsh configuration
 ##################################################################################
@@ -26,7 +28,7 @@ setup_zsh_conf() {
         # Check if ~/.nanorc exists
         if [ -f "$HOME/.nanorc" ]; then
             mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
-            printf "${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}\n"
+            printf "%snano configuration file backup in ~/.nanorc.bak%s\n" "${GREEN}" "${RC}"
         fi
 
         # Do stow dry run first to check for conflicts
@@ -65,5 +67,5 @@ setup_zsh_conf() {
     stop_spinner "$message"
 
     # Source the new configuration
-    printf "${BOLD}${ITALIC}Please execute ${BOLD}${MAGENTA}exec zsh${RC} ${BOLD}${ITALIC}and the installation will continue ...${RC}"
+    printf "%sPlease execute %sexec zsh%s %sand the installation will continue ...%s" "${BOLD}${ITALIC}" "${BOLD}${MAGENTA}" "${RC}" "${BOLD}${ITALIC}" "${RC}"
 }

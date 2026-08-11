@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=SC2034,SC2086,SC1091
+# shellcheck disable=SC2034,SC1090
 
 # Global fixed width (inside the box)
 BOX_WIDTH=76
@@ -10,8 +10,8 @@ BOX_WIDTH=76
 ##################################################################################
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-for f in "$SCRIPT_DIR"/scripts/*.sh; do
-    source "$f"
+for f in "$SCRIPT_DIR"/scripts/*; do
+    [[ -f "$f" ]] && source "$f"
 done
 
 ##################################################################################
