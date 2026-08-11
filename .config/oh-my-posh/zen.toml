@@ -42,7 +42,7 @@ final_space = true
   style = 'plain'
   background = 'transparent'
   foreground = 'p:yellow'
-  template = '{{ .Path }}'
+  template = "<b>{{ .Path }}</b>"
 
   [blocks.segments.properties]
     style = 'full'
