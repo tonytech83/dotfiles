@@ -10,6 +10,7 @@ install_zsh() {
 
     {
         local message
+        
         if ! command_exists zsh; then
             case "$PACKAGER" in
             pacman)

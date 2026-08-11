@@ -10,47 +10,44 @@ setup_zsh_conf() {
 
     {
         local message
-        local continue_message
-        local err_message
-        local success_message
 
-        # Clone dotfiles repo
+        # Check if the dotfiles directory exists
         cd "$DOTFILES_DIR" || {
-            err_message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
+            message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
             exit 1
         }
 
         # Check if stow is available
         if ! command_exists stow; then
-            err_message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
+            message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
             exit 1
         fi
 
         # Check if ~/.nanorc exists
         if [ -f "$HOME/.nanorc" ]; then
             mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
-            message="${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}"
+            printf "${GREEN}nano configuration file backup in ~/.nanorc.bak${RC}\n"
         fi
 
         # Do stow dry run first to check for conflicts
-        message="$(msg_warn "Checking for potential stow conflicts...")"
+        printf "$(msg_warn "Checking for potential stow conflicts...")"
 
         if ! stow -n .; then
-            err_message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
+            message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
             exit 1
         fi
 
         # If dry run successful, perform actual stow
-        message="$(msg_warn "Creating symlinks...")"
+        printf "$(msg_warn "Creating symlinks...")"
 
         if ! stow -t "$HOME" .; then
-            err_message="$(msg_err "Failed to create symlinks.")"
+            message="$(msg_err "Failed to create symlinks.")"
             exit 1
         fi
 
         # Verify critical files were linked
         if [ ! -f "$HOME/.config/zsh/.zshrc" ]; then
-            err_message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
+            message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
             exit 1
         fi
 
@@ -61,12 +58,12 @@ setup_zsh_conf() {
         mkdir -p "$HOME/.local/state/zsh"   # history
         mkdir -p "$HOME/.cache/zsh"         # completion cache
 
-        success_message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
-
-        # Source the new configuration
-        continue_message="$(msg_ok "Please execute ${BOLD}${ITALIC}${MAGENTA}exec zsh${RC} and the installation will continue ...")"
+        message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
 
     } >> "$LOG_FILE" 2>&1
 
-    stop_spinner "$err_message" "$success_message" "$continue_message"
+    stop_spinner "$message"
+
+    # Source the new configuration
+    printf "${BOLD}${ITALIC}Please execute ${BOLD}${MAGENTA}exec zsh${RC} ${BOLD}${ITALIC}and the installation will continue ...${RC}"
 }
