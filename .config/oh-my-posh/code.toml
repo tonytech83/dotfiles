@@ -14,6 +14,7 @@ final_space = true
   orange = "#f7931a"
   darkblue = "#7292b2"
   cyan-blue = "#06AAE3"
+  python-blue = "#306998"
   yellowgreen = "#9ACD32"
 
 [secondary_prompt]
@@ -123,7 +124,7 @@ final_space = true
 [[blocks.segments]]
   type = "python"
   style = "plain"
-  template = "<b><p:white>via </></b>{{ if .Venv }}<p:cyan-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
+  template = "<b><p:white>via </></b>{{ if .Venv }}<p:python-blue> </><b><p:yellow>v{{ .Full }}</></b>{{ else }}<p:gray> v{{ .Full }}</></b>{{ end }}"
   foreground = "p:gray"
   background = "transparent"
 

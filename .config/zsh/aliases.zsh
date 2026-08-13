@@ -13,19 +13,9 @@ alias ap='ansible-playbook'
 # =========================================================
 alias ls='eza -a --group-directories-first --icons=always --color=always'
 alias la='eza -al -h --mounts -g --group-directories-first --icons=always --color=always --git-repos-no-status'
+alias ll='eza -lh --icons --git'
 alias lt='eza -aT --group-directories-first --icons=always --color=always --level 2' # tree listing
-
-
-# alias ls='eza --icons'
-
-# # Detailed listing
-# alias ll='eza -lh --icons --git'
-
-# # Detailed listing including hidden files
-# alias la='eza -lah --icons --git'
-
-# # Tree view
-# alias tree='eza --tree --icons'
+alias tree='eza -aT --group-directories-first --icons=always --color=always --level 2'
 
 # Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
@@ -46,7 +36,9 @@ alias pscpu='ps auxf | sort -nr -k 3'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previous directory
+alias c='clear'
 
+# lf should be installed (https://github.com/gokcehan/lf/releases)
 lf() { # zsh follow lf navigation
     tmp=$(mktemp)
     command lf -last-dir-path="$tmp" "$@"
