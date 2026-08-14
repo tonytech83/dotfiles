@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034,SC1090
 
 # Global fixed width (inside the box)
-BOX_WIDTH=76
+BOOX_WIDTH=76
 
 ##################################################################################
 #####   Load external functions if available

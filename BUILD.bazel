@@ -1,0 +1,16 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+# load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+sh_binary(name = "bashism", srcs = ["tools/checks/bashism.sh"])
+sh_binary(name = "shellcheck", srcs = ["tools/checks/shellcheck.sh"])
+sh_binary(name = "typos", srcs = ["tools/checks/typos.sh"])
+
+# sh_test(name = "bashism_test", srcs = ["tools/checks/bashism.sh"], size="small",)
+# sh_test(name = "shellcheck_test", srcs = ["tools/checks/shellcheck.sh"], size="small",)
+# sh_test(name = "typos_test", srcs = ["tools/checks/typos.sh"], size="small",)
+
+# test_suite(
+#     name = "checks",
+#     tests = [":bashism_test", ":shellcheck_test", ":typos_test"],
+# )
+

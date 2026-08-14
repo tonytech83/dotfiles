@@ -1,2 +1,10 @@
 installation.log
 .config/zsh/plugins/
+logging
+
+# Bazel
+MODULE.bazel.lock
+bazel-bin
+bazel-dotfiles
+bazel-out
+bazel-testlogs
