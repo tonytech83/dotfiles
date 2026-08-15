@@ -1,20 +1,19 @@
-./.config/zsh/plugins/zsh-autosuggestions/install_test_zsh.sh: 
-./setup.sh: 
-./scripts/auth-sudo.sh: could not find any possible bashisms in bash script ./scripts/auth-sudo.sh
-./scripts/install-fd.sh: could not find any possible bashisms in bash script ./scripts/install-fd.sh
-./scripts/install-ohmyposh.sh: could not find any possible bashisms in bash script ./scripts/install-ohmyposh.sh
-./scripts/check-env.sh: could not find any possible bashisms in bash script ./scripts/check-env.sh
-./scripts/command-exists.sh: could not find any possible bashisms in bash script ./scripts/command-exists.sh
-./scripts/logging.sh: could not find any possible bashisms in bash script ./scripts/logging.sh
-./scripts/head.sh: 
-./scripts/install-zsh.sh: could not find any possible bashisms in bash script ./scripts/install-zsh.sh
-./scripts/setup-zsh-conf.sh: could not find any possible bashisms in bash script ./scripts/setup-zsh-conf.sh
-./scripts/conf-zsh-env.sh: could not find any possible bashisms in bash script ./scripts/conf-zsh-env.sh
-./scripts/update-system.sh: could not find any possible bashisms in bash script ./scripts/update-system.sh
-./scripts/install-zoxide.sh: could not find any possible bashisms in bash script ./scripts/install-zoxide.sh
-./scripts/install-deps.sh: could not find any possible bashisms in bash script ./scripts/install-deps.sh
-./scripts/output.sh: could not find any possible bashisms in bash script ./scripts/output.sh
-./scripts/install-fzf.sh: could not find any possible bashisms in bash script ./scripts/install-fzf.sh
-./scripts/install-eza.sh: could not find any possible bashisms in bash script ./scripts/install-eza.sh
-./scripts/verify-installed.sh: could not find any possible bashisms in bash script ./scripts/verify-installed.sh
-./scripts/spinner.sh: 
+
+could not find any possible bashisms in bash script ./scripts/auth-sudo.sh
+could not find any possible bashisms in bash script ./scripts/install-fd.sh
+could not find any possible bashisms in bash script ./scripts/install-ohmyposh.sh
+could not find any possible bashisms in bash script ./scripts/check-env.sh
+could not find any possible bashisms in bash script ./scripts/command-exists.sh
+could not find any possible bashisms in bash script ./scripts/logging.sh
+
+could not find any possible bashisms in bash script ./scripts/install-zsh.sh
+could not find any possible bashisms in bash script ./scripts/setup-zsh-conf.sh
+could not find any possible bashisms in bash script ./scripts/conf-zsh-env.sh
+could not find any possible bashisms in bash script ./scripts/update-system.sh
+could not find any possible bashisms in bash script ./scripts/install-zoxide.sh
+could not find any possible bashisms in bash script ./scripts/install-deps.sh
+could not find any possible bashisms in bash script ./scripts/output.sh
+could not find any possible bashisms in bash script ./scripts/install-fzf.sh
+could not find any possible bashisms in bash script ./scripts/install-eza.sh
+could not find any possible bashisms in bash script ./scripts/verify-installed.sh
+
