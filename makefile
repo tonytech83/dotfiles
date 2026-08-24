@@ -47,7 +47,7 @@ shellchek: $(OUTPUT_PATH)
 		exit $$status; \
 	fi
 
-typos: PHASE = typos ## Chek for typos
+typos: PHASE = typos ## Check for typos
 typos: $(OUTPUT_PATH)
 	@echo "***Checking for typos..."
 	@typos $(ROOT_DIR) $(OUTPUT); \
