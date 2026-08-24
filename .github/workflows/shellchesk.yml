@@ -5,12 +5,22 @@ permissions:
 
 on:
   push:
+    branches:
+      - main
+      - dev
     paths:
       - "**/*.sh"
   pull_request:
+    branches:
+      - main
+      - dev
     paths:
       - "**/*.sh"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   shellcheck:
