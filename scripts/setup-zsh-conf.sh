@@ -31,6 +31,12 @@ setup_zsh_conf() {
             printf "%snano configuration file backup in ~/.nanorc.bak%s\n" "${GREEN}" "${RC}"
         fi
 
+        # Check if ~/.vimrc exists
+        if [ -f "$HOME/.vimrc" ]; then
+            mv "$HOME/.vimrc" "$HOME/.vimrc.bak"
+            printf "%svim configuration file backup in ~/.vimrc.bak%s\n" "${GREEN}" "${RC}"
+        fi
+
         # Do stow dry run first to check for conflicts
         printf "$(msg_warn "Checking for potential stow conflicts...")"
 
