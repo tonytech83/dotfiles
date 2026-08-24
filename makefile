@@ -11,12 +11,15 @@ SHELL_SCRIPTS := $(shell find $(ROOT_DIR) -type f -name '*.sh' \
 	-not -path '*/.git/*' \
 	-not -path '*/.config/*')
 
-all: bashism shellchek typos
+all: bashism shellchek typos ## Do all checks
+
+help:     ## Show this help.
+	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-30s\033[0m %s\n", $$1, $$2}'\
 
 $(OUTPUT_PATH):
 	@mkdir -p $(OUTPUT_PATH)
 
-bashism: PHASE = bashism
+bashism: PHASE = bashism ## Check for bashism
 bashism: $(OUTPUT_PATH)
 	@echo "***Checking for bashism..."
 	@fail=0; \
@@ -34,7 +37,7 @@ bashism: $(OUTPUT_PATH)
 		echo "bashism check failed, see $(OUTPUT_ERR)"; \
 	fi
 
-shellchek: PHASE = shellchek
+shellchek: PHASE = shellchek ## Check for shell issues
 shellchek: $(OUTPUT_PATH)
 	@echo "***Checking for shell issues..."
 	@shellcheck $(SHELL_SCRIPTS) $(OUTPUT); \
@@ -44,7 +47,7 @@ shellchek: $(OUTPUT_PATH)
 		exit $$status; \
 	fi
 
-typos: PHASE = typos
+typos: PHASE = typos ## Chek for typos
 typos: $(OUTPUT_PATH)
 	@echo "***Checking for typos..."
 	@typos $(ROOT_DIR) $(OUTPUT); \
