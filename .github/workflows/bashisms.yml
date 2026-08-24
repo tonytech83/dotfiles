@@ -4,10 +4,11 @@ permissions:
   contents: read
 
 on:
+  push:
+    paths: "**/*.sh"
   pull_request:
     paths:
-      - "*.sh"
-  merge_group:
+      - "**/*.sh"
   workflow_dispatch:
 
 jobs:
