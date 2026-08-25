@@ -9,7 +9,7 @@ install_zoxide() {
     start_spinner "Installing..."
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to install zoxide   #####\n"
         
         local message
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##################################################################################
-##### Function to install oh-my-posh
+#####   Function to install oh-my-posh
 ##################################################################################
 install_ohmyposh() {
 
@@ -9,7 +9,7 @@ install_ohmyposh() {
     start_spinner "Installing..."
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to install oh-my-posh   #####\n"
         
         local mkdir_message
         local mkdir_confirm

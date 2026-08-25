@@ -13,6 +13,8 @@ install_deps() {
     start_spinner "Installing..."
 
     {
+        printf "\n#####   Function to install dependencies   #####\n"
+
         local message
         local install_status
 

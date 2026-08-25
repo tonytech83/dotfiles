@@ -2,12 +2,11 @@
 
 ##################################################################################
 #####   Function to install fd
-#####
-#####   A simple, fast and user-friendly alternative to 'find'
-#####
 ##################################################################################
-install_fd() {
 
+# A simple, fast and user-friendly alternative to 'find'
+
+install_fd() {
     print_step "Install fd"
     start_spinner "Installing..."
 

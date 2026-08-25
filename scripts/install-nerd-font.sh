@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
 ##################################################################################
-#####   Function to authenticate sudo early
+#####   Function to install Nerd font
 ##################################################################################
-
 install_nerd_font() {
 
 	print_step "Install Nerd font"
     start_spinner "Installing..."
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to install Nerd font   #####\n"
         
         local message
 

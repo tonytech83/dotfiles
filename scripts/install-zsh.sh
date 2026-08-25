@@ -9,7 +9,7 @@ install_zsh() {
     start_spinner "Installing..."
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to install zsh   #####\n"
         
         local message
         

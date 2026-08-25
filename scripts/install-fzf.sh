@@ -9,7 +9,7 @@ install_fzf() {
     start_spinner "Installing..."
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to install fzf  #####\n"
         
         local clone_message
         local message

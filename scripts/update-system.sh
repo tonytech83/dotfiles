@@ -12,7 +12,7 @@ update_system() {
     local unsupported=0
 
     {
-        printf "\n#####   Function to install eza   #####\n"
+        printf "\n#####   Function to update system packages   #####\n"
         
         case "$PACKAGER" in
             pacman)
