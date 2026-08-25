@@ -1,10 +1,15 @@
 .PHONY: all bashism shellcheck typos
 
+SCRIPT_VERSION=v1.0
+SCRIPT_AUTHOR=tonytech
+
 ROOT_DIR = .
 LOG_DIR = logging
 OUTPUT_PATH = $(ROOT_DIR)/$(LOG_DIR)
-OUTPUT_OUT = $(OUTPUT_PATH)/$(PHASE).out
-OUTPUT_ERR = $(OUTPUT_PATH)/$(PHASE).err
+# OUTPUT_OUT = $(OUTPUT_PATH)/$(PHASE).out
+# OUTPUT_ERR = $(OUTPUT_PATH)/$(PHASE).err
+OUTPUT_OUT = $(OUTPUT_PATH)/$(strip $(PHASE)).out
+OUTPUT_ERR = $(OUTPUT_PATH)/$(strip $(PHASE)).err
 OUTPUT = 1>$(OUTPUT_OUT) 2>$(OUTPUT_ERR)
 
 SHELL_SCRIPTS := $(shell find $(ROOT_DIR) -type f -name '*.sh' \
@@ -14,7 +19,10 @@ SHELL_SCRIPTS := $(shell find $(ROOT_DIR) -type f -name '*.sh' \
 all: bashism shellchek typos ## Do all checks
 
 help:     ## Show this help.
-	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-30s\033[0m %s\n", $$1, $$2}'\
+	@echo -e "\nUsage: make [target] ...\n"
+	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-30s\033[0m %s\n", $$1, $$2}'
+	@echo -e "\nWritten by $(SCRIPT_AUTHOR), version $(SCRIPT_VERSION)"
+	@echo -e "Please report any bug or error to the author."
 
 $(OUTPUT_PATH):
 	@mkdir -p $(OUTPUT_PATH)
@@ -37,7 +45,7 @@ bashism: $(OUTPUT_PATH)
 		echo "bashism check failed, see $(OUTPUT_ERR)"; \
 	fi
 
-shellchek: PHASE = shellchek ## Check for shell issues
+shellchek: PHASE = shellcheck ## Check for shell issues
 shellchek: $(OUTPUT_PATH)
 	@echo "***Checking for shell issues..."
 	@shellcheck $(SHELL_SCRIPTS) $(OUTPUT); \
@@ -56,3 +64,8 @@ typos: $(OUTPUT_PATH)
 		echo "typos check failed, see $(OUTPUT_ERR)"; \
 		exit $$status; \
 	fi
+
+clean: PHASE = clean ## Clean all logs
+clean: $(OUTPUT_PATH)
+	@echo "*** Clean all logs from previous executions..."
+	@rm -rf $(OUTPUT_PATH)
