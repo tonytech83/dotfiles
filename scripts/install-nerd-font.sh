@@ -10,6 +10,8 @@ install_nerd_font() {
     start_spinner "Installing..."
 
     {
+        printf "\n#####   Function to install eza   #####\n"
+        
         local message
 
         if fc-list 2>/dev/null | grep -qi "$NERD_FONT_FAMILY"; then

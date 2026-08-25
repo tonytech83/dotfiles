@@ -9,6 +9,8 @@ install_ohmyposh() {
     start_spinner "Installing..."
 
     {
+        printf "\n#####   Function to install eza   #####\n"
+        
         local mkdir_message
         local mkdir_confirm
         local message

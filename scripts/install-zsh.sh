@@ -9,6 +9,8 @@ install_zsh() {
     start_spinner "Installing..."
 
     {
+        printf "\n#####   Function to install eza   #####\n"
+        
         local message
         
         if ! command_exists zsh; then

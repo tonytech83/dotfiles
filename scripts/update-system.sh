@@ -11,8 +11,9 @@ update_system() {
     local message
     local unsupported=0
 
-    # Redirect all output to log file
     {
+        printf "\n#####   Function to install eza   #####\n"
+        
         case "$PACKAGER" in
             pacman)
                 ${SUDO_CMD} "$PACKAGER" -Sy

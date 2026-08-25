@@ -12,7 +12,8 @@ install_fd() {
     start_spinner "Installing..."
 
     {   
-        printf "#####   Function to install fd   #####"
+        printf "\n#####   Function to install fd   #####\n"
+        
         local message
 
         if command_exists fd; then
