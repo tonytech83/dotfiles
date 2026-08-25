@@ -18,6 +18,7 @@ done
 #####   Execute the functions in order
 ##################################################################################
 head
+install_nerd_font
 start_log
 check_env
 auth_sudo
