@@ -15,6 +15,7 @@ install_eza() {
 
         if command_exists eza; then
             message="$(msg_skip "eza")"
+            printf "Installation skipped - eza is already present!\n"
         else
             cd /tmp || exit
             wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-musl.tar.gz -O - | tar xz

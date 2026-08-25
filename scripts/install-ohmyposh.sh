@@ -17,6 +17,7 @@ install_ohmyposh() {
 
         if command_exists oh-my-posh; then
             message="$(msg_skip "oh-my-posh")"
+            printf "Installation skipped - oh-my-posh is already present!\n"
         else
             # Check if the ./local/bin exists
             LOCALBINFOLDER="$HOME/.local/bin"

@@ -7,6 +7,7 @@
 # A simple, fast and user-friendly alternative to 'find'
 
 install_fd() {
+
     print_step "Install fd"
     start_spinner "Installing..."
 
@@ -17,6 +18,7 @@ install_fd() {
 
         if command_exists fd; then
             message="$(msg_skip "fd")"
+            printf "Installation skipped - fd is already present!\n"
         else
             local fd_version
             fd_version=$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest | jq -r '.tag_name')

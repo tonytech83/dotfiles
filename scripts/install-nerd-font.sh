@@ -15,10 +15,12 @@ install_nerd_font() {
 
         if fc-list 2>/dev/null | grep -qi "$NERD_FONT_FAMILY"; then
             message="$(msg_skip "$NERD_FONT_FAMILY")"
+            printf "Installation skipped - $NERD_FONT_FAMILY is already present!\n"
         else
             font_temp_dir=$(mktemp -d)
             font_archive="$font_temp_dir/JetBrainsMono.tar.xz"
             font_unpack_dir="$font_temp_dir/unpacked"
+            NERD_FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
             font_dir="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
             mkdir -p "$font_unpack_dir" "$font_dir"
 

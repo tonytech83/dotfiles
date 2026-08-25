@@ -16,6 +16,7 @@ install_fzf() {
 
         if command_exists fzf; then
             message="$(msg_skip "fzf")"
+            printf "Installation skipped - fzf is already present!\n"
         else
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install --bin

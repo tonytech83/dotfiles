@@ -7,7 +7,7 @@
 ##################################################################################
 install_deps() {
     # List of dependencies to install (space-separated, not quoted)
-    DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates ripgrep jq"
+    DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates jq"
 
     print_step "Install dependencies"
     start_spinner "Installing..."
