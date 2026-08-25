@@ -16,7 +16,7 @@ cd ~/dotfiles && git clone https://github.com/tonytech83/dotfiles.git .
 
 `setup.sh` detects your package manager (apt, dnf, yum, pacman, zypper, apk), installs the tools below, stows the configs, points `ZDOTDIR` at `~/.config/zsh` via `/etc/zsh/zshenv`, and sets ZSH as the default shell. Details are logged to `installation.log`.
 
-Installed tools: `zsh`, `stow`, `eza`, `fzf`, `fd`, `zoxide`, `oh-my-posh`.
+Installed tools: `zsh`, `stow`, `eza`, `fzf`, `fd`, `zoxide`, `oh-my-posh`, `jq`.
 
 ## What's included
 
@@ -31,8 +31,10 @@ Installed tools: `zsh`, `stow`, `eza`, `fzf`, `fd`, `zoxide`, `oh-my-posh`.
 │   ├── oh-my-posh/    # prompt themes
 │   ├── rofi/          # app launcher + themes
 │   └── zsh/           # .zshrc, .zshenv, aliases, bindings, fzf, plugins, prompt
-├── scripts/           # folder contains all scripts
+├── scripts/           # contains all scripts
 ├── .nanorc            # nano config
+├── .vimrc             # vim config
+├── makefile           # GNU makefile (bashism, shell check and typos)
 └── setup.sh           # installer
 ```
 
@@ -58,7 +60,8 @@ Managed by a tiny loader in `zsh/plugins.zsh` (git clone + source, no framework)
 
 ## Prompt
 
-The prompt uses Oh-My-Posh with `oh-my-posh/code.toml`. A [Nerd Font](https://www.nerdfonts.com/) is required for icons to render correctly.
+The prompt uses Oh-My-Posh with `oh-my-posh/code.toml`.
+A [Nerd Font](https://www.nerdfonts.com/) is required for icons to render correctly.
 
 ## License
 
