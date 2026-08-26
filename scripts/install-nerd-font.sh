@@ -15,7 +15,7 @@ install_nerd_font() {
 
         if fc-list 2>/dev/null | grep -qi "$NERD_FONT_FAMILY"; then
             message="$(msg_skip "$NERD_FONT_FAMILY")"
-            printf "Installation skipped - $NERD_FONT_FAMILY is already present!\n"
+            printf "Installation skipped - %s is already present!\n" "$NERD_FONT_FAMILY"
         else
             font_temp_dir=$(mktemp -d)
             font_archive="$font_temp_dir/JetBrainsMono.tar.xz"
