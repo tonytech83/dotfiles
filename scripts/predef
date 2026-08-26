@@ -18,6 +18,6 @@ REVERSE="$(printf '\033[7m')"
 HIDDEN="$(printf '\033[8m')"
 STRIKE="$(printf '\033[9m')"
 
-SUCCESS="󰸞"
+SUCCESS="✓"
 FAILED=""
 WARNING=""
