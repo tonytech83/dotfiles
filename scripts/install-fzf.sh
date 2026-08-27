@@ -9,11 +9,14 @@ install_fzf() {
     start_spinner "Installing..."
 
     {
+        printf "\n#####   Function to install fzf  #####\n"
+        
         local clone_message
         local message
 
         if command_exists fzf; then
             message="$(msg_skip "fzf")"
+            printf "Installation skipped - fzf is already present!\n"
         else
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install --bin

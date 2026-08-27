@@ -6,7 +6,7 @@
 BOX_WIDTH=76
 
 ##################################################################################
-#####   Load external functions if available
+#####   Load external functions
 ##################################################################################
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -19,6 +19,7 @@ done
 ##################################################################################
 head
 start_log
+install_nerd_font "$@"
 check_env
 auth_sudo
 update_system

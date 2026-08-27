@@ -1,5 +1,4 @@
-installation.log
 .config/zsh/plugins/
 .config/dlv/
 .config/go/
-logging/
+log/
