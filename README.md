@@ -1,4 +1,4 @@
-[![Test](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/test.yml?branch=main&label=Test&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/test.yml)
+[![Install](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/install.yml?branch=main&label=Install&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/install.yml)
 [![Release](https://img.shields.io/github/actions/workflow/status/tonytech83/dotfiles/release.yml?branch=main&label=Release&style=for-the-badge)](https://github.com/tonytech83/dotfiles/actions/workflows/release.yml)
 [![Version](https://img.shields.io/github/v/release/tonytech83/dotfiles?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/tonytech83/dotfiles/releases)
 
