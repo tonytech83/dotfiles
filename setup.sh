@@ -19,7 +19,7 @@ done
 ##################################################################################
 head
 start_log
-install_nerd_font
+install_nerd_font "$@"
 check_env
 auth_sudo
 update_system
