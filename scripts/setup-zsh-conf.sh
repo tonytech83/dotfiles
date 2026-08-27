@@ -3,14 +3,16 @@
 # shellcheck disable=SC2059
 
 ##################################################################################
-##### Function to setup zsh configuration
+#####   Function to setup zsh configuration
 ##################################################################################
 setup_zsh_conf() {
 
     print_step "Setup zsh configuration"
     start_spinner "Configuring..."
 
-    {
+    {   
+        printf "\n#####   Function to setup zsh configuration   #####\n"
+
         local message
 
         # Check if the dotfiles directory exists
