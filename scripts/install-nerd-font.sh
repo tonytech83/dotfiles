@@ -43,7 +43,7 @@ install_nerd_font() {
                 echo
                 return 0
                 ;;
-            *) ehco "Please answer y or n." ;;
+            *) echo "Please answer y or n." ;;
         esac
     done
  
