@@ -2,11 +2,11 @@
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
     "type": "file",
-    "source": "~/.config/omarchy/branding/about.txt",
-    "color": { "1": "green" },
+    "source": "~/.config/fedora/branding/deathstar.txt",
+    "color": { "1": "bright_black", "2": "white" },
     "padding": {
       "top": 2,
-      "right": 6,
+      "right": 2,
       "left": 2,
     },
   },
@@ -17,43 +17,43 @@
     "break",
     {
       "type": "custom",
-      "format": "\u001b[90m┌─────────────────────── Hardware ────────────────────────┐",
+      "format": "{#90}┌─────────────────────── {#3}{#1}{#green}Hardware{#}{#90} ─────────────────────────┐",
     },
     {
       "type": "host",
-      "key": " ",
+      "key": "{#90}│{#}{#green}   Station  ",
       "keyColor": "green",
     },
     {
       "type": "cpu",
-      "key": " ",
+      "key": "{#90}│{#}{#green}  CPU       ",
       "showPeCoreCount": true,
       "keyColor": "green",
     },
     {
       "type": "gpu",
-      "key": " ",
+      "key": "{#90}│{#}{#green}  GPU       ",
       "detectionMethod": "pci",
       "keyColor": "green",
     },
     {
       "type": "display",
-      "key": "󱄄 ",
+      "key": "{#90}│{#}{#green} 󱄄 Display   ",
       "keyColor": "green",
     },
     {
       "type": "disk",
-      "key": "󰋊 ",
+      "key": "{#90}│{#}{#green} 󰋊 Disk      ",
       "keyColor": "green",
     },
     {
       "type": "memory",
-      "key": " ",
+      "key": "{#90}│{#}{#green}  Memory    ",
       "keyColor": "green",
     },
     {
       "type": "swap",
-      "key": "󰓡 ",
+      "key": "{#90}│{#}{#green} 󰓡 Swap      ",
       "keyColor": "green",
     },
     {
@@ -63,46 +63,46 @@
     "break",
     {
       "type": "custom",
-      "format": "\u001b[90m┌──────────────────────── Software ────────────────────────┐",
+      "format": "{#90}┌──────────────────────── {#3}{#1}{#blue}Software{#}{#90} ────────────────────────┐",
     },
     {
       "type": "os",
-      "key": "\ue900 Distro",
+      "key": "{#90}│{#}{#blue} \ue900 Distro    ",
       "keyColor": "blue",
     },
     {
-      "type": "kernel",
-      "key": " Kernel",
+      "type": "kernel    ",
+      "key": "{#90}│{#}{#blue}  Kernel",
       "keyColor": "blue",
     },
     {
       "type": "wm",
-      "key": " WinMan",
+      "key": "{#90}│{#}{#blue}  WinMan    ",
       "keyColor": "blue",
     },
     {
       "type": "de",
-      "key": " DesktopEnv",
+      "key": "{#90}│{#}{#blue}  DesktopEnv",
       "keyColor": "blue",
     },
     {
       "type": "terminal",
-      "key": " Terminal",
+      "key": "{#90}│{#}{#blue}  Terminal  ",
       "keyColor": "blue",
     },
     {
       "type": "packages",
-      "key": "󰏖 Packages",
+      "key": "{#90}│{#}{#blue} 󰏖 Packages  ",
       "keyColor": "blue",
     },
     {
       "type": "wmtheme",
-      "key": "󰉼 Theme",
+      "key": "{#90}│{#}{#blue} 󰉼 Theme     ",
       "keyColor": "blue",
     },
     {
       "type": "terminalfont",
-      "key": " Font",
+      "key": "{#90}│{#}{#blue}  Font      ",
       "keyColor": "blue",
     },
     {
@@ -112,17 +112,17 @@
     "break",
     {
       "type": "custom",
-      "format": "\u001b[90m┌────────────────── Age / Uptime / Update ─────────────────┐",
+      "format": "{#90}┌────────────────── {#3}{#1}{#magenta}Age / Uptime / Update{#}{#90} ─────────────────┐",
     },
     {
       "type": "command",
-      "key": "󱦟 OS Age",
+      "key": "{#90}│{#}{#magenta} 󱦟 OS Age    ",
       "keyColor": "magenta",
       "text": "echo $(( ($(date +%s) - $(stat -c %W /)) / 86400 )) days",
     },
     {
       "type": "uptime",
-      "key": "󱫐 Uptime",
+      "key": "{#90}│{#}{#magenta} 󱫐 Uptime    ",
       "keyColor": "magenta",
     },
     {
