@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install zoxide
@@ -11,7 +11,7 @@ install_zoxide() {
     {
         printf "\n#####   Function to install zoxide   #####\n"
         
-        local message
+        message
 
         if command_exists zoxide; then
             message="$(msg_skip "zoxide")"
@@ -19,9 +19,9 @@ install_zoxide() {
         else
             curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
             if verify_installed zoxide; then
-                message="$(msg_ok "Successfully installed ${BOLD}zoxide${RC}.")"
+                message="$(msg_ok "Successfully installed ${BOLD}${ITALIC}${MAGENTA}zoxide${RC}.")"
             else
-                message="$(msg_err "Installation of ${BOLD}zoxide${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_err "Installation of ${BOLD}${ITALIC}${MAGENTA}zoxide${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
             fi
         fi
     } >> "$LOG_FILE" 2>&1

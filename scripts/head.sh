@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 ##### Head
@@ -10,11 +10,15 @@ head() {
     # Define and format output using printf to control line width (80 characters)
     if [ -f /etc/os-release ]; then
         # shellcheck source=/dev/null
-        . /etc/os-release
-        os_name="${ID^}"          # e.g. "Ubuntu" or "Debian"
-        desc="${PRETTY_NAME}"     # e.g. "Debian GNU/Linux 12 (bookworm)"
-        version="${VERSION_ID}"   # e.g. "12"
-        codename="${VERSION_CODENAME}" # e.g. "bookworm"
+        eval "$(
+            . /etc/os-release
+            rest="${ID#?}"
+            first="${ID%"$rest"}"
+            printf 'os_name=%s\n'  "\"$(printf '%s' "$first" | tr '[:lower:]' '[:upper:]')$rest\""
+            printf 'desc=%s\n'     "\"$PRETTY_NAME\""
+            printf 'version=%s\n'  "\"$VERSION_ID\""
+            printf 'codename=%s\n' "\"$VERSION_CODENAME\""
+        )"
     else
         os_name="Unknown"
         desc="Unknown"

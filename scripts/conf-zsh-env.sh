@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC1091
 
@@ -11,10 +11,10 @@ conf_zsh_env() {
     start_spinner "Configuring..."
 
     {
-        local message
-        local zshenv_path
-        local os_id
-        local os_like
+        message
+        zshenv_path
+        os_id
+        os_like
 
         # zsh's global config dir varies:
         # Debian/Arch/Alpine use /etc/zsh,

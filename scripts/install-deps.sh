@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC2086
 
@@ -15,8 +15,8 @@ install_deps() {
     {
         printf "\n#####   Function to install dependencies   #####\n"
 
-        local message
-        local install_status
+        message
+        install_status
 
         case "$PACKAGER" in
         pacman)

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC2034,SC1090
 
@@ -8,10 +8,12 @@ BOX_WIDTH=76
 ##################################################################################
 #####   Load external functions
 ##################################################################################
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd -P)"
 
 for f in "$SCRIPT_DIR"/scripts/*; do
-    [[ -f "$f" ]] && source "$f"
+    if [ -f "$f" ]; then
+        . "$f"
+    fi
 done
 
 ##################################################################################
@@ -19,11 +21,11 @@ done
 ##################################################################################
 head
 start_log
-install_nerd_font "$@"
 check_env
 auth_sudo
 update_system
 install_deps
+install_nerd_font "$@"
 install_zsh
 conf_zsh_env
 install_ohmyposh

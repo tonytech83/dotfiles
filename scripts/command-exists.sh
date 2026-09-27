@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to check if a command exists

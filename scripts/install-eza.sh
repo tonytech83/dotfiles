@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install eza
@@ -11,7 +11,7 @@ install_eza() {
     {   
         printf "\n#####   Function to install eza   #####\n"
 
-        local message
+        message
 
         if command_exists eza; then
             message="$(msg_skip "eza")"

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC2059
 
@@ -13,7 +13,7 @@ setup_zsh_conf() {
     {   
         printf "\n#####   Function to setup zsh configuration   #####\n"
 
-        local message
+        message
 
         # Check if the dotfiles directory exists
         cd "$DOTFILES_DIR" || {
@@ -76,4 +76,5 @@ setup_zsh_conf() {
 
     # Source the new configuration
     printf "%sPlease execute %sexec zsh%s %sand the installation will continue ...%s" "${BOLD}${ITALIC}" "${BOLD}${MAGENTA}" "${RC}" "${BOLD}${ITALIC}" "${RC}"
+    echo
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install zsh
@@ -11,7 +11,7 @@ install_zsh() {
     {
         printf "\n#####   Function to install zsh   #####\n"
         
-        local message
+        message
         
         if ! command_exists zsh; then
             case "$PACKAGER" in
