@@ -12,6 +12,17 @@ pkg_installed() {
     esac
 }
 
+install_pkg() {
+    case "$PACKAGER" in
+        apt-get) $SUDO_CMD env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" ;;
+        dnf|yum) $SUDO_CMD "$PACKAGER" install -y "$@" ;;
+        pacman)  $SUDO_CMD pacman -S --noconfirm --needed "$@" ;;
+        zypper)  $SUDO_CMD zypper --non-interactive install "$@" ;;
+        apk)     $SUDO_CMD apk add "$@" ;;
+        *)       printf 'Unsupported package manager: %s\n' "$PACKAGER"; return 1 ;;
+    esac
+}
+
 ##################################################################################
 #####   Function to install dependencies
 ##################################################################################
