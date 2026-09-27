@@ -11,10 +11,10 @@ install_fd() {
     print_step "Install fd"
     start_spinner "Installing..."
 
+    message=""
+
     {   
         printf "\n#####   Function to install fd   #####\n"
-        
-        message
 
         if command_exists fd; then
             message="$(msg_skip "fd")"

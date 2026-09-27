@@ -12,11 +12,11 @@ install_deps() {
     print_step "Install dependencies"
     start_spinner "Installing..."
 
+    message=""
+    install_status=1
+
     {
         printf "\n#####   Function to install dependencies   #####\n"
-
-        message
-        install_status
 
         case "$PACKAGER" in
         pacman)

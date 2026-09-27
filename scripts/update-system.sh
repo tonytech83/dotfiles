@@ -8,11 +8,11 @@ update_system() {
     print_step "Update system packages"
     start_spinner "Updating..."
 
+    message=""
+    unsupported=0
+
     {
         printf "\n#####   Function to update system packages   #####\n"
-
-        message
-        unsupported=0
         
         case "$PACKAGER" in
             pacman)

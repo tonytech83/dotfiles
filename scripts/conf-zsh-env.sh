@@ -10,12 +10,12 @@ conf_zsh_env() {
     print_step "Configure zsh environment"
     start_spinner "Configuring..."
 
-    {
-        message
-        zshenv_path
-        os_id
-        os_like
+    message=""
+    zshenv_path=""
+    os_id=""
+    os_like=""
 
+    {
         # zsh's global config dir varies:
         # Debian/Arch/Alpine use /etc/zsh,
         # RHEL/Fedora-family use /etc/zshenv

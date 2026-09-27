@@ -8,10 +8,10 @@ install_zoxide() {
     print_step "Install zoxide"
     start_spinner "Installing..."
 
+    message=""
+
     {
         printf "\n#####   Function to install zoxide   #####\n"
-        
-        message
 
         if command_exists zoxide; then
             message="$(msg_skip "zoxide")"

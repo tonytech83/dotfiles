@@ -8,11 +8,11 @@ install_fzf() {
     print_step "Install fzf"
     start_spinner "Installing..."
 
+    message=""
+
     {
         printf "\n#####   Function to install fzf  #####\n"
         
-        message
-
         if command_exists fzf; then
             message="$(msg_skip "fzf")"
             printf "Installation skipped - fzf is already present!\n"

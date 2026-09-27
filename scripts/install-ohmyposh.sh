@@ -8,12 +8,12 @@ install_ohmyposh() {
     print_step "Install oh-my-posh"
     start_spinner "Installing..."
 
+    mkdir_message=""
+    mkdir_confirm=""
+    message=""
+
     {
         printf "\n#####   Function to install oh-my-posh   #####\n"
-        
-        mkdir_message
-        mkdir_confirm
-        message
 
         if command_exists oh-my-posh; then
             message="$(msg_skip "oh-my-posh")"

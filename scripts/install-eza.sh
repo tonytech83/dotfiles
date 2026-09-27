@@ -8,10 +8,10 @@ install_eza() {
     print_step "Install eza"
     start_spinner "Installing..."
 
+    message=""
+
     {   
         printf "\n#####   Function to install eza   #####\n"
-
-        message
 
         if command_exists eza; then
             message="$(msg_skip "eza")"
