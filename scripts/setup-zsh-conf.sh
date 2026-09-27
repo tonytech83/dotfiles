@@ -16,60 +16,67 @@ setup_zsh_conf() {
         message
         continue=true
 
-        # Check if the dotfiles directory exists
-        cd "$DOTFILES_DIR" || {
-            message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
-            continue=false
-        }
+        while continue; do
 
-        # Check if stow is available
-        if ! command_exists stow; then
-            message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
-            continue=false
-        fi
+            # Check if the dotfiles directory exists
+            cd "$DOTFILES_DIR" || {
+                message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
+                continue=false
+                break
+            }
 
-        # Check if ~/.nanorc exists
-        if [ -f "$HOME/.nanorc" ]; then
-            mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
-            printf "%snano configuration file backup in ~/.nanorc.bak%s\n" "${GREEN}" "${RC}"
-        fi
+            # Check if stow is available
+            if ! command_exists stow; then
+                message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
+                continue=false
+                break
+            fi
 
-        # Check if ~/.vimrc exists
-        if [ -f "$HOME/.vimrc" ]; then
-            mv "$HOME/.vimrc" "$HOME/.vimrc.bak"
-            printf "%svim configuration file backup in ~/.vimrc.bak%s\n" "${GREEN}" "${RC}"
-        fi
+            # Check if ~/.nanorc exists
+            if [ -f "$HOME/.nanorc" ]; then
+                mv "$HOME/.nanorc" "$HOME/.nanorc.bak"
+                printf "%snano configuration file backup in ~/.nanorc.bak%s\n" "${GREEN}" "${RC}"
+            fi
 
-        # Do stow dry run first to check for conflicts
-        printf "$(msg_warn "Checking for potential stow conflicts...")"
+            # Check if ~/.vimrc exists
+            if [ -f "$HOME/.vimrc" ]; then
+                mv "$HOME/.vimrc" "$HOME/.vimrc.bak"
+                printf "%svim configuration file backup in ~/.vimrc.bak%s\n" "${GREEN}" "${RC}"
+            fi
 
-        if ! stow -n .; then
-            message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
-            continue=false
-        fi
+            # Do stow dry run first to check for conflicts
+            printf "$(msg_warn "Checking for potential stow conflicts...")"
 
-        # If dry run successful, perform actual stow
-        printf "$(msg_warn "Creating symlinks...")"
+            if ! stow -n .; then
+                message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
+                continue=false
+                break
+            fi
 
-        if ! stow -t "$HOME" .; then
-            message="$(msg_err "Failed to create symlinks.")"
-            continue=false
-        fi
+            # If dry run successful, perform actual stow
+            printf "$(msg_warn "Creating symlinks...")"
 
-        # Verify critical files were linked
-        if [ ! -f "$HOME/.config/zsh/.zshrc" ]; then
-            message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
-            continue=false
-        fi
+            if ! stow -t "$HOME" .; then
+                message="$(msg_err "Failed to create symlinks.")"
+                continue=false
+                break
+            fi
 
-        # Change default shell to zsh for current user
-        ${SUDO_CMD} chsh -s "$(which zsh)" "$USER"
+            # Verify critical files were linked
+            if [ ! -f "$HOME/.config/zsh/.zshrc" ]; then
+                message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
+                continue=false
+            fi
 
-        # Create required directories
-        mkdir -p "$HOME/.local/state/zsh"   # history
-        mkdir -p "$HOME/.cache/zsh"         # completion cache
+            # Change default shell to zsh for current user
+            ${SUDO_CMD} chsh -s "$(which zsh)" "$USER"
 
-        message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
+            # Create required directories
+            mkdir -p "$HOME/.local/state/zsh"   # history
+            mkdir -p "$HOME/.cache/zsh"         # completion cache
+        
+            message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
+        done
 
     } >> "${LOG_FILE:-/dev/null}" 2>&1
 
