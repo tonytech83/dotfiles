@@ -14,17 +14,18 @@ setup_zsh_conf() {
         printf "\n#####   Function to setup zsh configuration   #####\n"
 
         message
+        continue=true
 
         # Check if the dotfiles directory exists
         cd "$DOTFILES_DIR" || {
             message="$(msg_err "Dotfiles directory '$DOTFILES_DIR' not found")"
-            exit 1
+            continue=false
         }
 
         # Check if stow is available
         if ! command_exists stow; then
             message="$(msg_err "${BOLD}Stow${RC} is not installed. Please install it first.")"
-            exit 1
+            continue=false
         fi
 
         # Check if ~/.nanorc exists
@@ -44,7 +45,7 @@ setup_zsh_conf() {
 
         if ! stow -n .; then
             message="$(msg_err "${BOLD}Stow${RC} detected conflicts. You may need to manually resolve conflicts.")"
-            exit 1
+            continue=false
         fi
 
         # If dry run successful, perform actual stow
@@ -52,13 +53,13 @@ setup_zsh_conf() {
 
         if ! stow -t "$HOME" .; then
             message="$(msg_err "Failed to create symlinks.")"
-            exit 1
+            continue=false
         fi
 
         # Verify critical files were linked
         if [ ! -f "$HOME/.config/zsh/.zshrc" ]; then
             message="$(msg_err "Failed to create ${BOLD}.zshrc${RC} symlink.")"
-            exit 1
+            continue=false
         fi
 
         # Change default shell to zsh for current user
@@ -73,6 +74,10 @@ setup_zsh_conf() {
     } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
+
+    if [ "$continue" = false ]; then
+        exit 1
+    fi
 
     # Source the new configuration
     printf "%sPlease execute %sexec zsh%s %sand the installation will continue ...%s" "${BOLD}${ITALIC}" "${BOLD}${MAGENTA}" "${RC}" "${BOLD}${ITALIC}" "${RC}"
