@@ -70,7 +70,7 @@ setup_zsh_conf() {
 
         message="$(msg_ok "Configuration of ${BOLD}${ITALIC}${MAGENTA}zsh${RC} setup completed successfully!")"
 
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 

@@ -41,7 +41,7 @@ install_deps() {
         else
             message="$(msg_err "Something went wrong while installing dependencies! Check ${BOLD}${LOG_FILE}${RC} for details.")"
         fi
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 

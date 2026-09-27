@@ -42,7 +42,7 @@ conf_zsh_env() {
 		fi
 		EOF
         message="$(msg_ok "Zsh environment configured successfully!")"
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 }

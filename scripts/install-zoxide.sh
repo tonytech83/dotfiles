@@ -24,7 +24,7 @@ install_zoxide() {
                 message="$(msg_err "Installation of ${BOLD}${ITALIC}${MAGENTA}zoxide${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
             fi
         fi
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 }
