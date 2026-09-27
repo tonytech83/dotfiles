@@ -88,6 +88,7 @@ setup_zsh_conf() {
     fi
 
     # Source the new configuration
+    printf "\n"
     printf "%sPlease execute %sexec zsh%s %sand the installation will continue ...%s" "${BOLD}${ITALIC}" "${BOLD}${MAGENTA}" "${RC}" "${BOLD}${ITALIC}" "${RC}"
-    echo
+    printf "\n"
 }

@@ -2,6 +2,16 @@
 
 # shellcheck disable=SC2086
 
+pkg_installed() {
+    case "$PACKAGER" in
+        apt-get)        dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "install ok installed" ;;
+        dnf|yum|zypper) rpm -q "$1" >/dev/null 2>&1 ;;
+        pacman)         pacman -Q "$1" >/dev/null 2>&1 ;;
+        apk)            apk info -e "$1" >/dev/null 2>&1 ;;
+        *)              return 1 ;;
+    esac
+}
+
 ##################################################################################
 #####   Function to install dependencies
 ##################################################################################
@@ -10,42 +20,33 @@ install_deps() {
     DEPENDENCIES="stow curl tree wget unzip fontconfig ca-certificates jq"
 
     print_step "Install dependencies"
-    start_spinner "Installing..."
+    
+    for dep in $DEPENDENCIES; do
+        start_spinner "Installing..."
 
-    message=""
-    install_status=1
+        message=""
+        install_status=0
 
-    {
-        printf "\n#####   Function to install dependencies   #####\n"
+        {
+            if pkg_installed "$dep"; then
+                message="$(msg_skip "$dep")"
+                printf "\n--- %s skipped (already installed) ---\n" "$dep"
+            elif install_pkg "$dep"; then
+                message="$(msg_install_ok "$dep")"
+                printf "\n--- %s installed ---\n" "$dep"
+            else
+                install_status=$?
+                message="$(msg_err "Something went wrong while installing ${BOLD}${ITALIC}${MAGENTA}$dep${RC} pkg! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                printf "\n--- %s FAILED (exit %s) ---\n" "$dep" "$install_status"
+            fi
+        } >> "${LOG_FILE:-/dev/null}" 2>&1
 
-        case "$PACKAGER" in
-        pacman)
-            ${SUDO_CMD} pacman-key --init
-            ${SUDO_CMD} "${PACKAGER}" -Sy --needed --noconfirm archlinux-keyring
-            ${SUDO_CMD} "${PACKAGER}" -Syu --needed --noconfirm ${DEPENDENCIES}
-            ;;
-        dnf | yum | zypper | apt | apt-get)
-            ${SUDO_CMD} "${PACKAGER}" install -y ${DEPENDENCIES}
-            ;;
-        apk)
-            ${SUDO_CMD} "${PACKAGER}" add ${DEPENDENCIES}
-            ;;
-        *)
-            ${SUDO_CMD} "${PACKAGER}" install -yq ${DEPENDENCIES}
-            ;;
-        esac
-        install_status=$?
-
-        if [ "$install_status" -eq 0 ]; then
-            message="$(msg_ok "Dependencies installed!")"
-        else
-            message="$(msg_err "Something went wrong while installing dependencies! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+        if [ "$install_status" -ne 0 ]; then
+            stop_spinner "$message"
+            exit 1
         fi
-    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
-    stop_spinner "$message"
-
-    if [ "$install_status" -ne 0 ]; then
-        exit 1
-    fi
+        stop_spinner "$message"
+        
+    done
 }

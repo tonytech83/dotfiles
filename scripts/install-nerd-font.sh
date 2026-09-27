@@ -46,7 +46,7 @@ install_nerd_font() {
         case "$need_nerd_font" in
             ''|[Yy]*) break ;;
             [Nn]*)
-                printf "Skipping font installation.\n\n" | tee -a "$LOG_FILE"
+                printf "Skipping font installation.\n" | tee -a "$LOG_FILE"
                 return 0
                 ;;
             *) echo "Please answer y or n." ;;
@@ -75,7 +75,7 @@ install_nerd_font() {
     done <<EOF
 $fonts
 EOF
-    printf "\n\n"
+    printf "\n"
 
     while true; do
         printf "Select font: "
@@ -88,7 +88,7 @@ EOF
     done
 
     if [ "$choice" -eq 0 ]; then
-        printf "Skipping font installation.\n\n" | tee -a "$LOG_FILE"
+        printf "Skipping font installation.\n" | tee -a "$LOG_FILE"
         return 0
     fi
 
@@ -127,7 +127,7 @@ EOF
                         message="$(msg_err "No font files found for ${BOLD}$font_family${RC}!")"
                     else
                         fc-cache -f "$font_dir" >/dev/null 2>&1
-                        message="$(msg_ok "Font ${BOLD}$font_family${RC} installed.")"
+                        message="$(msg_ok "Font ${BOLD}${ITALIC}${MAGENTA}$font_family${RC} installed.")"
                     fi
                 fi
             fi

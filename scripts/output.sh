@@ -5,7 +5,7 @@
 ##################################################################################
 # Section header: ==> Title
 print_step() {
-    printf '%s==>%s %s%s%s\n' \
+    printf '\n%s==>%s %s%s%s\n' \
         "${BOLD}${BLUE}" "${RC}" "${BOLD}${ITALIC}${YELLOW}" "$1" "${RC}"
 }
 
@@ -13,7 +13,7 @@ print_step() {
 msg_ok()   { printf '[%s%s] %s' "${BOLD}${GREEN}${SUCCESS}"  "${RC}" "$1"; }
 
 msg_install_ok() { 
-    printf '[%s%s] Successfully installed %s%s%s.' \
+    printf '[%s%s] Successfully installed %s%s%s package.' \
     "${BOLD}${GREEN}${SUCCESS}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}"
 }
 

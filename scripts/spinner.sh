@@ -48,8 +48,6 @@ stop_spinner() {
             printf "%b\n" "$msg"
         fi
     done
-
-    printf "\n"
 }
 
 # Kill the spinner on exit, error, or Ctrl+C
