@@ -2,13 +2,12 @@
 
 [colors.primary]
 background = '#2E3440'
-# foreground = '#D8DEE9'
-foreground = '#FFFACD'
+foreground = '#BDC5BD'
 
 [colors.selection]
 text = '#000000'
 # background = '#FFFACD'
-background = '#BF616A'
+background = '#b68388'
 
 [colors.normal]
 black = '#191C1D'
@@ -25,8 +24,7 @@ black = '#727C7C'
 red = '#D18FAF'
 green = '#B7CEB0'
 yellow = '#BCBCBC'
-blue = '#E0CF9F'
+blue = '#81A1C1'
 magenta = '#C7A9D9'
 cyan = '#BBDA97'
 white = '#BDC5BD'
-

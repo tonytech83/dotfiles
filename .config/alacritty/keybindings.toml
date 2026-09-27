@@ -1,0 +1,26 @@
+[keyboard]
+bindings = [
+  # Clipboard
+  { key = "C", mods = "Super", action = "Copy" },
+  { key = "Insert", mods = "Shift", action = "PasteSelection" },
+  { key = "Insert", mods = "Shift", action = "Paste" },
+  { key = "V", mods = "Control", action = "Paste" },
+  # { key = "V", mods = "Super", action = "Paste" },
+  # { key = "S", mods = "Control|Shift", action = "Paste" },
+  # { key = "C", mods = "Control", action = "Copy" }, # commented out
+
+  # Scrolling
+  { key = "Up", mods = "Control|Shift", action = "ScrollLineUp" },
+  { key = "Down", mods = "Control|Shift", action = "ScrollLineDown" },
+  { key = "K", mods = "Control|Shift", action = "ScrollLineUp" },
+  { key = "J", mods = "Control|Shift", action = "ScrollLineDown" },
+  { key = "PageUp", mods = "Control|Shift", action = "ScrollPageUp" },
+  { key = "PageDown", mods = "Control|Shift", action = "ScrollPageDown" },
+  { key = "Home", mods = "Control|Shift", action = "ScrollToTop" },
+  { key = "End", mods = "Control|Shift", action = "ScrollToBottom" },
+
+  # Miscellaneous
+  { key = "Up", mods = "Control|Shift", action = "IncreaseFontSize" },
+  { key = "Down", mods = "Control|Shift", action = "DecreaseFontSize" },
+  { key = "Backspace", mods = "Control|Shift", action = "ResetFontSize" },
+]

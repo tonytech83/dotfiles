@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install eza
@@ -8,10 +8,10 @@ install_eza() {
     print_step "Install eza"
     start_spinner "Installing..."
 
+    message=""
+
     {   
         printf "\n#####   Function to install eza   #####\n"
-
-        local message
 
         if command_exists eza; then
             message="$(msg_skip "eza")"
@@ -23,12 +23,12 @@ install_eza() {
             ${SUDO_CMD} chown root:root eza
             ${SUDO_CMD} mv eza /usr/local/bin/eza
             if verify_installed eza; then
-                message="$(msg_ok "Successfully installed ${BOLD}eza${RC}.")"
+                message="$(msg_install_ok "eza")"
             else
-                message="$(msg_err "Installation of ${BOLD}eza${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "eza")"
             fi
         fi
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 }

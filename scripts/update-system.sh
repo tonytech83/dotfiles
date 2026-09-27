@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to update system packages
@@ -8,8 +8,8 @@ update_system() {
     print_step "Update system packages"
     start_spinner "Updating..."
 
-    local message
-    local unsupported=0
+    message=""
+    unsupported=0
 
     {
         printf "\n#####   Function to update system packages   #####\n"

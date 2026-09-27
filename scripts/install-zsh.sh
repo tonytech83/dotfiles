@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install zsh
@@ -11,9 +11,12 @@ install_zsh() {
     {
         printf "\n#####   Function to install zsh   #####\n"
         
-        local message
-        
-        if ! command_exists zsh; then
+        message
+
+        if command_exists zsh; then
+            message="$(msg_skip "zsh")"
+            printf "Installation skipped - zsh is already present!\n"
+        else
             case "$PACKAGER" in
             pacman)
                 ${SUDO_CMD} "$PACKAGER" -S --needed --noconfirm zsh
@@ -26,15 +29,13 @@ install_zsh() {
                 ;;
             esac
             if verify_installed zsh; then
-                message="$(msg_ok "Successfully installed ${BOLD}zsh${RC}.")"
+                message="$(msg_install_ok "zsh")"
             else
-                message="$(msg_err "Installation of ${BOLD}zsh${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "zsh")"
             fi
-        else
-            message="$(msg_skip "zsh")"
         fi
 
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 }

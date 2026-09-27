@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ##################################################################################
 #####   Function to install oh-my-posh
@@ -8,12 +8,12 @@ install_ohmyposh() {
     print_step "Install oh-my-posh"
     start_spinner "Installing..."
 
+    mkdir_message=""
+    mkdir_confirm=""
+    message=""
+
     {
         printf "\n#####   Function to install oh-my-posh   #####\n"
-        
-        local mkdir_message
-        local mkdir_confirm
-        local message
 
         if command_exists oh-my-posh; then
             message="$(msg_skip "oh-my-posh")"
@@ -29,12 +29,12 @@ install_ohmyposh() {
 
             # Install Oh My Posh
             if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin && verify_installed oh-my-posh; then
-                message="$(msg_ok "Successfully installed ${BOLD}oh-my-posh${RC}!")"
+                message="$(msg_install_ok "oh-my-posh")"
             else
-                message="$(msg_err "Installation of ${BOLD}oh-my-posh${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "oh-my-posh")"
             fi
         fi
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$mkdir_message" "$mkdir_confirm" "$message"
 }
