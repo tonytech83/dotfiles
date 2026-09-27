@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC1091
 
@@ -10,12 +10,12 @@ conf_zsh_env() {
     print_step "Configure zsh environment"
     start_spinner "Configuring..."
 
-    {
-        local message
-        local zshenv_path
-        local os_id
-        local os_like
+    message=""
+    zshenv_path=""
+    os_id=""
+    os_like=""
 
+    {
         # zsh's global config dir varies:
         # Debian/Arch/Alpine use /etc/zsh,
         # RHEL/Fedora-family use /etc/zshenv
@@ -42,7 +42,7 @@ conf_zsh_env() {
 		fi
 		EOF
         message="$(msg_ok "Zsh environment configured successfully!")"
-    } >> "$LOG_FILE" 2>&1
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
 
     stop_spinner "$message"
 }
