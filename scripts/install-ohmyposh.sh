@@ -29,9 +29,9 @@ install_ohmyposh() {
 
             # Install Oh My Posh
             if curl -sS https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin && verify_installed oh-my-posh; then
-                message="$(msg_ok "Successfully installed ${BOLD}${ITALIC}${MAGENTA}oh-my-posh${RC}!")"
+                message="$(msg_install_ok "oh-my-posh")"
             else
-                message="$(msg_err "Installation of ${BOLD}${ITALIC}${MAGENTA}oh-my-posh${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "oh-my-posh")"
             fi
         fi
     } >> "${LOG_FILE:-/dev/null}" 2>&1

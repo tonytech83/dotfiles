@@ -27,9 +27,9 @@ install_fd() {
             ${SUDO_CMD} mv fd-*/fd /usr/local/bin/fd
             ${SUDO_CMD} chmod +x /usr/local/bin/fd
             if verify_installed fd; then
-                message="$(msg_ok "Successfully installed ${BOLD}fd${RC}.")"
+                message="$(msg_install_ok "fd")"
             else
-                message="$(msg_err "Installation of ${BOLD}fd${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "fd")"
             fi
         fi
     } >> "${LOG_FILE:-/dev/null}" 2>&1

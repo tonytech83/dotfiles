@@ -22,9 +22,9 @@ install_fzf() {
             mkdir -p "$HOME/.local/bin"
             ln -sf "$HOME/.fzf/bin/fzf" "$HOME/.local/bin/fzf"
             if verify_installed fzf; then
-                message="$(msg_ok "Successfully installed ${BOLD}${ITALIC}${MAGENTA}fzf${RC}.")"
+                message="$(msg_install_ok "fzf")"
             else
-                message="$(msg_err "Installation of ${BOLD}${ITALIC}${MAGENTA}fzf${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "fzf")"
             fi
         fi
     } >> "${LOG_FILE:-/dev/null}" 2>&1

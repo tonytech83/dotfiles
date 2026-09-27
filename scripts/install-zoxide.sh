@@ -19,9 +19,9 @@ install_zoxide() {
         else
             curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
             if verify_installed zoxide; then
-                message="$(msg_ok "Successfully installed ${BOLD}${ITALIC}${MAGENTA}zoxide${RC}.")"
+                message="$(msg_install_ok "zoxide")"
             else
-                message="$(msg_err "Installation of ${BOLD}${ITALIC}${MAGENTA}zoxide${RC} could not be verified! Check ${BOLD}${LOG_FILE}${RC} for details.")"
+                message="$(msg_install_err "zoxide")"
             fi
         fi
     } >> "${LOG_FILE:-/dev/null}" 2>&1
