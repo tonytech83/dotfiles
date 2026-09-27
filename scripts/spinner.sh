@@ -1,51 +1,62 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC2034
 
 ##################################################################################
 #####   Spinner
 ##################################################################################
-# Define an array of Braille patterns for a spinner
-eight_dot_cell_pattern=("⣾" "⢿" "⡿" "⣷" "⣯" "⢟" "⡻" "⣽")
-six_dot_cell_pattern=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+# Braille patterns for the spinner (space-separated frames)
+eight_dot_cell_pattern="⣾ ⢿ ⡿ ⣷ ⣯ ⢟ ⡻ ⣽"
+six_dot_cell_pattern="⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏"
 
 # Set the pattern
-braille_spinner=("${six_dot_cell_pattern[@]}")
+braille_spinner="$six_dot_cell_pattern"
 
-# Set the duration for each spinner frame (in seconds)
+# Duration of each spinner frame (in seconds)
 frame_duration=0.2
 
-# Function to start the spinner in the background
+spinner_pid=""
+
+# Start the spinner in the background
 start_spinner() {
     action_message=$1
 
     (
-        idx=0
         while :; do
-            printf "\r[%s] %s" "${braille_spinner[idx]}" "$action_message"
-            idx=$(( (idx + 1) % ${#braille_spinner[@]} ))
-            sleep "$frame_duration"
+            for frame in $braille_spinner; do
+                printf "\r[%s] %s" "$frame" "$action_message"
+                sleep "$frame_duration"
+            done
         done
     ) &
     spinner_pid=$!
-    disown
 }
 
-# Function to stop the spinner with U+2800
+# Stop the spinner and print the result messages
 stop_spinner() {
-    kill -9 "$spinner_pid" 2>/dev/null  # Stop the spinner loop
-    wait "$spinner_pid" 2>/dev/null
+    if [ -n "$spinner_pid" ]; then
+        kill "$spinner_pid" 2>/dev/null
+        wait "$spinner_pid" 2>/dev/null
+        spinner_pid=""
+    fi
 
-    # Move to start of line and clear it, instead of just moving to a new line
+    # Move to start of line and clear it
     printf "\r\033[K"
 
-    # Process all arguments
     for msg in "$@"; do
-        [[ -n "$msg" ]] && printf "%b\n" "$msg"
+        if [ -n "$msg" ]; then
+            printf "%b\n" "$msg"
+        fi
     done
-
-    printf "\n"
 }
 
-# Kill the spinner when the script exits, regardless of success or failure or someone pressing Ctrl+C
-trap 'kill -9 "$spinner_pid" 2>/dev/null; printf "\n"' EXIT
+# Kill the spinner on exit, error, or Ctrl+C
+cleanup_spinner() {
+    if [ -n "$spinner_pid" ]; then
+        kill "$spinner_pid" 2>/dev/null
+        printf "\r\033[K"
+    fi
+}
+trap cleanup_spinner EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM

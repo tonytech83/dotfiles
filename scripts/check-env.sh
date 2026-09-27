@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # shellcheck disable=SC2034
 
@@ -9,20 +9,27 @@ check_env() {
 
     print_step "Check the environment for necessary tools and permissions"
     start_spinner "Checking..."
-
+    
     {
-        local req_message
-        local pm_message
-        local priv_message
+        pm_message
+        priv_message
+        continue=true
 
-        # Check for required commands
-        REQUIREMENTS="curl sudo"
-        for req in $REQUIREMENTS; do
-            if ! command_exists "$req"; then
-                req_message="$(msg_err "Missing required command: $req")"
-                exit 1
-            fi
-        done
+        # Determine privilege escalation method
+        if [ "$(id -u)" -eq 0 ]; then
+            # Running as root
+            SUDO_CMD=""
+            priv_message="$(msg_ok "Running as root, sudo is not needed.")"
+        elif command_exists sudo; then
+            SUDO_CMD="sudo"
+            priv_message="$(msg_ok "Using ${BOLD}${ITALIC}${MAGENTA}sudo${RC} for privilege escalation.")"
+        elif command_exists doas && [ -f "/etc/doas.conf" ]; then
+            SUDO_CMD="doas"
+            priv_message="$(msg_ok "Using ${BOLD}${ITALIC}${MAGENTA}doas${RC} for privilege escalation.")"
+        else
+            priv_message="$(msg_err "No suitable privilege escalation tool found (sudo/doas).")"
+            continue=false
+        fi
 
         # Determine the package manager to use
         PACKAGEMANAGER="apt-get dnf yum pacman zypper apk"
@@ -36,25 +43,15 @@ check_env() {
 
         if [ -z "$PACKAGER" ]; then
             pm_message="$(msg_err "No supported package manager found.")"
-            exit 1
+            continue=false
         fi
 
-        # Determine privilege escalation method
-        if [ "$(id -u)" -eq 0 ]; then
-            # Running as root
-            SUDO_CMD=""
-            priv_message="$(msg_ok "Running as root, sudo is not needed.")"
-        elif command_exists sudo; then
-            SUDO_CMD="sudo"
-            priv_message="$(msg_ok "Using ${BOLD}${ITALIC}${MAGENTA}sudo${RC} for privilege escalation.")"
-        elif command_exists doas && [ -f "/etc/doas.conf" ]; then
-            SUDO_CMD="doas"
-            priv_message="$(msg_ok "Using doas for privilege escalation.")"
-        else
-            priv_message="$(msg_err "No suitable privilege escalation tool found (sudo/doas).")"
-            exit 1
-        fi
-    } >> "$LOG_FILE" 2>&1
 
-    stop_spinner "$req_message" "$pm_message" "$priv_message"
+    } >> "${LOG_FILE:-/dev/null}" 2>&1
+
+    stop_spinner "$pm_message" "$priv_message"
+
+    if [ "$continue" = false ]; then
+        exit 1
+    fi
 }
