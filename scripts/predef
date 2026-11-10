@@ -20,4 +20,4 @@ STRIKE="$(printf '\033[9m')"
 
 SUCCESS="✓"
 FAILED=""
-WARNING=""
+WARNING="i"

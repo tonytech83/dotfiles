@@ -1,0 +1,104 @@
+console_title_template = "{{ .Shell }} in {{ .Folder }}"
+version = 3
+final_space = true
+
+[palette]
+black = "#2E3440"
+green = "#A3BE8C"
+white = "#D8DEE9"
+gray = "#84868b"
+blue = "#81A1C1"
+red = "#BF616A"
+yellow = "#EBCB8B"
+purple = "#B48EAD"
+orange = "#f7931a"
+darkblue = "#7292b2"
+cyan-blue = "#06AAE3"
+python-blue = "#306998"
+yellowgreen = "#9ACD32"
+
+############################################################################
+##### First line - Left
+############################################################################
+[[blocks]]
+type = "prompt"
+alignment = "left"
+newline = true
+
+############################################################################
+##### Python
+############################################################################
+[[blocks.segments]]
+type = "python"
+style = "plain"
+template = "{{ if .Venv }}<p:python-blue> {{ .Full }}{{ else }}<p:gray> {{ .Full }}{{ end }}</> "
+background = "transparent"
+
+[blocks.segments.properties]
+fetch_virtual_env = true
+display_mode = "files"
+
+############################################################################
+##### Path
+############################################################################
+[[blocks.segments]]
+type = "path"
+style = "plain"
+background = "transparent"
+foreground = "p:yellow"
+template = "<b><i>{{ .Path }}</i></b>"
+
+[blocks.segments.properties]
+style = "full"
+
+############################################################################
+##### Git
+############################################################################
+[[blocks.segments]]
+type = "git"
+style = "plain"
+foreground = "p:gray"
+background = "transparent"
+template = "<b> <p:red> </>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{else}}≡{{ end }} <p:cyan-blue>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</></b>"
+
+[blocks.segments.properties]
+branch_icon = ""
+commit_icon = "@"
+fetch_status = true
+
+############################################################################
+##### Second line
+############################################################################
+[[blocks]]
+type = "prompt"
+alignment = "left"
+newline = true
+
+############################################################################
+##### Prompt
+############################################################################
+[[blocks.segments]]
+type = "text"
+style = "plain"
+template = "❯"
+foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:white{{end}}",
+]
+background = "transparent"
+
+[blocks.segments.options]
+cache_duration = "none"
+
+[transient_prompt]
+foreground_templates = [
+    "{{ if gt .Code 0 }}p:red{{ end }}",
+    "{{ if eq .Code 0 }}p:green{{ end }}",
+]
+background = "transparent"
+template = "❯ "
+
+[secondary_prompt]
+foreground = "p:purple"
+background = "transparent"
+template = "❯❯ "

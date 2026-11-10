@@ -2,6 +2,7 @@
 
 # shellcheck disable=SC2086
 
+# Check whether a package is already installed for the active system package manager.
 pkg_installed() {
     case "$PACKAGER" in
         apt-get)        dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "install ok installed" ;;
@@ -12,6 +13,7 @@ pkg_installed() {
     esac
 }
 
+# Install one or more packages using the current distro's package manager.
 install_pkg() {
     case "$PACKAGER" in
         apt-get) $SUDO_CMD env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" ;;
