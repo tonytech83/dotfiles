@@ -5,7 +5,7 @@
 ##################################################################################
 get_font_list() {
     json=$(curl -fsSL "$FONTS_JSON_URL") || {
-        printf "Failed to fetch font list from %s\n" "$FONTS_JSON_URL" | tee -a "$LOG_FILE" >&2
+        printf '[%s%s] %s %s\n' "${BOLD}${RED}${FAILED}" "${RC}" "Failed to fetch font list from" "$FONTS_JSON_URL" | tee -a "$LOG_FILE" >&2
         return 1
     }
 
@@ -18,7 +18,7 @@ print("\n".join(sorted(f["folderName"] for f in data["fonts"])))
     elif command -v jq >/dev/null 2>&1; then
         printf '%s' "$json" | jq -r '.fonts[].folderName' | sort
     else
-        printf "Need python3 or jq installed to parse the font list\n" | tee -a "$LOG_FILE" >&2
+        printf '[%s%s] %s\n' "${BOLD}${RED}${FAILED}" "${RC}" "Need python3 or jq installed to parse the font list." | tee -a "$LOG_FILE" >&2
         return 1
     fi
 }
@@ -46,7 +46,7 @@ install_nerd_font() {
         case "$need_nerd_font" in
             ''|[Yy]*) break ;;
             [Nn]*)
-                printf "Skipping font installation.\n" | tee -a "$LOG_FILE"
+                printf '[%s%s] %s\n' "${BOLD}${YELLOW}${INFO}" "${RC}" "Skipping font installation." | tee -a "$LOG_FILE"
                 return 0
                 ;;
             *) echo "Please answer y or n." ;;
@@ -58,7 +58,7 @@ install_nerd_font() {
     total=$(printf '%s\n' "$fonts" | grep -c .)
 
     if [ "$total" -eq 0 ]; then
-        printf "No fonts available - continuing without font installation.\n" | tee -a "$LOG_FILE"
+        printf '[%s%s] %s\n' "${BOLD}${YELLOW}${INFO}" "${RC}" "No fonts available - continuing without font installation." | tee -a "$LOG_FILE"
         return 0
     fi
 
@@ -87,8 +87,10 @@ EOF
         printf "Invalid choice, try again.\n"
     done
 
+    echo ""
+
     if [ "$choice" -eq 0 ]; then
-        printf "Skipping font installation.\n" | tee -a "$LOG_FILE"
+        printf '[%s%s] %s\n' "${BOLD}${YELLOW}${INFO}" "${RC}" "Skipping font installation." | tee -a "$LOG_FILE"
         return 0
     fi
 

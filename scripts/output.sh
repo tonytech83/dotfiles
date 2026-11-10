@@ -10,10 +10,10 @@ print_step() {
 }
 
 # Status line builders (==> message), no trailing newline
-msg_ok()   { printf '[%s%s] %s' "${BOLD}${GREEN}${SUCCESS}"  "${RC}" "$1"; }
+msg_ok() { printf '[%s%s] %s' "${BOLD}${GREEN}${SUCCESS}" "${RC}" "$1"; }
 
 msg_install_ok() { 
-    printf '[%s%s] Successfully installed %s%s%s package.' \
+    printf '[%s%s] %s%s%s - Successfully installed package.' \
     "${BOLD}${GREEN}${SUCCESS}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}"
 }
 
@@ -22,12 +22,12 @@ msg_install_err() {
     "${BOLD}${RED}${FAILED}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}" "${BOLD}${LOG_FILE}${RC}"
 }
 
-msg_err()  { printf '[%s%s] %s' "${BOLD}${RED}${FAILED}"    "${RC}" "$1"; }
+msg_err() { printf '[%s%s] %s' "${BOLD}${RED}${FAILED}" "${RC}" "$1"; }
 
-msg_warn() { printf '[%s%s] %s' "${BOLD}${YELLOW}${WARNING}" "${RC}" "$1"; }
+msg_warn() { printf '[%s%s] %s' "${BOLD}${YELLOW}${INFO}" "${RC}" "$1"; }
 
-# "Installation skipped - <tool> is already present!"
+# "<tool> - Installation skipped is already present!"
 msg_skip() {
-    printf '[%s%s] Installation skipped - %s%s%s is already present!' \
-        "${BOLD}${GREEN}${SUCCESS}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}"
+    printf '[%s%s] %s%s%s - Installation skipped, package is already latest version!' \
+        "${BOLD}${YELLOW}${INFO}" "${RC}" "${BOLD}${ITALIC}${MAGENTA}" "$1" "${RC}"
 }
